@@ -342,12 +342,45 @@ display:-webkit-box;
 
 ### CSS单位
 1.px:绝对单位，表示一个像素点，实际大小决定于设备像素比
+
 2.em:相对于当前对象字体大小，如果当前行内字体未设置font-size，则默认1rem = 16px（浏览器默认字体大小）; 通常可以设置body{ font-size:62.5%}，因为62.5%*16px = 10px;
+
 3.rem:相对于:root 即html元素的字体大小绝对；
+
 4.vw、vh:相对于页面视窗大小，把窗口分为100份，100vw即100份视窗宽度。
 
 ### 圣杯布局
-前提概念：浮动元素会左右浮动直至遇到边框或者另一个浮动元素。当两个元素的宽度不超过一行的宽度时将会并排呈现，否则另一个浮动元素换行。如果想在不改变两个元素宽度和两个浮动元素宽度超过一行宽度的前提下，实现两个浮动元素并排呈现，可以利用margin-left负值。margin表示当前元素的content和其它元素content之间的距离。而margin-left是指元素的最左边和其它元素最右边的距离。如果为左边距为负值则content会向左移动。我们先假设center元素为第一个浮动元素，left元素为第二个浮动元素
+概念：浮动元素会左右浮动直至遇到边框或者另一个浮动元素。当两个元素的宽度不超过一行的宽度时将会并排呈现，否则另一个浮动元素换行。如果想在不改变两个元素宽度和两个浮动元素宽度超过一行宽度的前提下，实现两个浮动元素并排呈现，可以利用margin-left负值。margin表示当前元素的content和其它元素content之间的距离。而margin-left是指元素的最左边和其它元素最右边的距离。如果为左边距为负值则content会向左移动。我们先假设center元素为第一个浮动元素，left元素为第二个浮动元素
+
+```
+ <style>
+    .middle {
+        overflow: hidden;
+    }
+    .center {
+        height: 100px;
+        width: 100%;
+        background-color: green;
+        float: left;
+    }
+    .left {
+        height: 200px;
+        width: 200px;
+        background-color: red;
+        float: left;
+
+
+    }
+</style>
+<div class="middle">
+    <div class="center"></div>
+    <div class="left"></div>
+</div>
+```
+
 （1）当两个浮动元素在两行时，下面的浮动元素margin-left负值没自身宽度大。两个浮动元素仍然会两行呈现。
+![avator](https://github.dev/ChienLeeVer/notes/blob/main/cssImage/123.png)
+
 （2）当margin-left负值大于自身浮动元素宽度时，浏览器会认为当前浮动元素已经不在当前行，而是浮动到上一行。
+
 （3）如果margin-left值设置为负百分比，此时是相对于父容器而言，根据这个值算出是否浮动到上一行。如果算出的值是超过自身浮动元素的宽度则拉到上一行。此时需要注意的是，第二行的浮动元素被拉到第一行后margin-left的起始位置是相对于原本第一行浮动元素的最右边。
