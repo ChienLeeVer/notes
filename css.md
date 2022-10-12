@@ -442,3 +442,40 @@ display:-webkit-box;
 </html>
 ```
 ![](/cssImage/%E5%9C%A3%E6%9D%AF5.png)
+
+### 双飞翼布局
+概念：在圣杯布局的基础上，取消container的padding为left和right预留的位置,改为在center外添加一个容器，在center添加margin:0 100px;这样做核心在于使用外边距将内容封锁在两边浮动元素的中间。
+```
+.container {
+    border: 1px solid black;
+    overflow:hidden;
+}
+.left {
+    background-color: greenyellow;
+    float:left;
+    width:100px;
+    margin-left:-100%;
+}
+.center {
+    background-color: darkorange;
+    width:100%;
+    margin:0 100px;
+}
+.right {
+    background-color: darkgreen;
+    float:left;
+    width:100px;
+    margin-left:-100px;
+}
+.centerOuter {
+    float:left;
+    width:100%;
+
+}
+
+<section class="container">
+    <article class="centerOuter"><main class="center"><br /><br /><br /></main></article>
+    <article class="left"><br /><br /><br /></article>
+    <article class="right"><br /><br /><br /></article>
+</section>
+```
