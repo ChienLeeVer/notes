@@ -8,7 +8,8 @@
 
 ### 元素居中
 1.文本居中: <br> (1) 单行文本居中：```line-height = height```or 盒模型高度；
-            (2) 多行文本居中：```padding = (盒模型高度 - 总行高) / 2；```<br> &nbsp;&nbsp;&nbsp;&nbsp;  note:盒模型高度-总行高=p标签除了文字内容之外的高度空间,因此通过上下分配padding把文字挤压到中间.行高和文字大小的关系，如font-size:12px;&nbsp;line-height:36px;表示行高为字体大小的3倍；
+            (2) 多行文本居中：```padding = (盒模型高度 - 总行高) / 2；```<br> &nbsp;&nbsp;&nbsp;&nbsp;
+            note:盒模型高度-总行高=p标签除了文字内容之外的高度空间,因此通过上下分配padding把文字挤压到中间.行高和文字大小的关系，如font-size:12px;&nbsp;line-height:36px;表示行高为字体大小的3倍；
             (3)```vertical-align:middle;``` ：只适用于行内元素、行内块元素、表格里的单元格
 2.
 
