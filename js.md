@@ -783,3 +783,8 @@ const myMap = new Map()
 3.块级作用域：let和const存在块级作用域
 4.重复声明：let和const不允许重复声明
 5.变量更改：const变量声明时必须初始化，并且一旦初始化化后所指向的数据内存地址不可更改
+
+### 判断一个属性是否在对象上
+1.  Object.prototype.hasOwnProperty() 判断一个对象是否具有实例属性
+2.  attr in obj 判断一个属性是否在对象的实例/原型链上
+3.  obj[attr] !== undefined 缺点在于无法判断对象属性值为undefined的属性是否存在
