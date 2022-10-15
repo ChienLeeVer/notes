@@ -644,7 +644,7 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
 因此，根组件实例data可以使用对象，而组件实例的data必须使用函数
 
 ### 给对象新增属性但视图不更新
-因为vu2中后面新增的属性不是响应式，即没有通过Object.defineProperty()设置。
+原因：vu2中后面新增的属性不是响应式，即没有通过Object.defineProperty()设置。
 解决办法：
 
     （1）Vue.set(target, key, value)  //适合少量属性更改
