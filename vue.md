@@ -544,6 +544,7 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
 2.this.$nextTick(function(){})：由于响应式是异步处理的，使用该方法后将会在DOM更新后立刻执行function(){},并且该方法返回一个promise实例对象；
 
 ---
+## 面试系列
 
 ### Vue的理解
 1.vue的特性：（1）数据驱动：vue采用的是MVVM架构，M表示模型层，处理业务逻辑和服务端的交互。V表示视图层，把数据模型通过UI的方式展示出来。VM表示视图模型层，是模型层和视图层之间的桥梁。
@@ -605,3 +606,46 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
         })
     })
 ```
+
+### 首屏加载缓慢
+1.首屏加载时间：用户输入地址到页面首屏内容渲染完成的过程所需的时间
+
+2.如何获得加载时间：
+
+方式1：document.addEventListener('DOMContentLoaded',(event)=>{})；
+
+方式2：performance.getEntriesByName('first-contentful-paint')[0].startTime
+
+3.加载缓慢的原因：
+（1）网络延迟；
+（2）加载文件体积过大；
+（3）重复请求相同的加载文件；
+（4）加载文件时，渲染内容被阻塞
+
+4.解决方案：
+
+（1）减少入口文件体积：将不同的路由分成不同的组件，并且通过```component:()=>import()```的方式动态加载路由组件
+
+（2）静态资源缓存：利用本地缓存如http请求头设置last-modified、etag等字段，适当利用localStorage
+
+（3）图片资源合并：将字体图片或者小图片合成一张图，使用雪碧图
+
+（4）UI框架按需加载：如element-ui按需要的组件引入
+
+（5）使用Gzip压缩：安装compression-webpack-plugin插件并配置
+
+（6）组件重复打包：对多个组件引用同样的js文件，在webpack配置文件中修改CommonsChunkPlugin
+
+（7）使用SSR
+
+
+### 为什么data是一个函数而不是对象
+在创建组件实例的时候，data就相当于构造函数的原型对象的一个属性，如果data设置为一个对象，那么所有组件实例将共享这个对象，会造成数据污染，而使用函数返回对象，则会为每个组件实例创建单独的对象。
+因此，根组件实例data可以使用对象，而组件实例的data必须使用函数
+
+### 给对象新增属性但视图不更新
+因为vu2中后面新增的属性不是响应式，即没有通过Object.defineProperty()设置。
+解决办法：
+
+    （1）Vue.set(target, key, value)  //适合少量属性更改
+    （2）this.someObject = Object.assign({}, this.someObject, {newProperty:1...}) //适合大量属性更改
