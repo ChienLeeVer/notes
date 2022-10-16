@@ -649,3 +649,52 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
 
     （1）Vue.set(target, key, value)  //适合少量属性更改
     （2）this.someObject = Object.assign({}, this.someObject, {newProperty:1...}) //适合大量属性更改
+
+### 插件和组件的区别
+
+1，编写方式：组件可以使用一个.vue文件或者组件注册中的template属性编写，而插件通过通过暴露一个组件.install=函数（Vue,options）编写相关配置项
+
+2.组册方式：组件可以使用Vue.component()进行全局组件组册，也可以直接在组件内部通过components属性进行局部组件组册，而插件只能通过Vue.use（）的方式组册组件
+
+3.使用场景：组件用于构成业务场景模块，而插件用于增强vue
+
+### 组件之间的通信方式
+1.父子之间：父组件通过在子组件标签上自定义属性传递数据，子组件通过props属性接收父组件传递过来的数据。父组件通过监听子组件标签上的自定义事件，当该事件触发时同时触发父组件事件，子组件通过$emit触发自定义事件并向函数传递数据。父组件通过给子组件标签添加ref属性，从而父组件通过this.$refs获取自组件实例。
+
+2.兄弟之间：通过$eventBus，即定义一个事件总线类并实例化到Vue实例的原型链上，兄弟之间即可使用监听和调用。或者通过this.$parent.on() ，this.$parent.emit()/this.$root的方式传递数据
+```
+class Bus {
+    constructor() {
+        this.callbacks = {}
+    }
+    $on(name, fn) {
+        this.callbacks[name] = this.callback[name] || []
+        this.callbacks[name].push(fn)
+    }
+
+    $emit(name, args) {
+        if(this.callbacks[name]) {
+            this.callbacks[name].forEach(cb=>cb(args))
+        }
+    }
+}
+
+Vue.prototype.$bus = new Bus()
+
+//其它组件上.vue
+this.$bus.$on('xxx',fn)
+//.vue
+this.$bux.$emit('xx')
+```
+
+3.祖孙之间：祖组件定义provide函数返回数据对象，孙组件通过inject像props那样接收数据
+
+4.复杂之间通过vuex共享数据
+
+### 双向数据绑定原理
+
+双向数据绑定：数据更新时视图更新，视图更新时数据也同步更新
+
+双向数据绑定的流程：首先通过new Vue()初始化，然后通过监听器Observer,对data中数据进行响应式处理，同时使用Complier解析器对模板进行编译，找到动态绑定的数据，从data中取出数据用于初始化视图。紧接着使用Watcher和更新函数，当数据变化时，Watcher会调用更新函数更新视图。由于data中key可能会在多个地方使用，所以每个key都用一个管家dep来管理，一旦data发生变化立刻找到对应的dep，通知Watcher调用对应的更新函数
+
+原理：数据劫持+订阅发布者模式
