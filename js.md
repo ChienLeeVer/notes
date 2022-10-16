@@ -1,4 +1,4 @@
-# JS
+ # JS
 
 标签（空格分隔）： javascript
 
@@ -709,7 +709,14 @@ for (let item of set.entries()) {
 // ["red", "red"]
 // ["green", "green"]
 // ["blue", "blue"]
-```
+
+
+      、d、
+      、
+
+      ’
+
+                                                    r h```
 
 ### Map
 map数据结构类似对象，但是不同之处在于map数据结构的属性名除了字符串之外，还可以是其它对象
@@ -788,3 +795,36 @@ const myMap = new Map()
 1.  Object.prototype.hasOwnProperty() 判断一个对象是否具有实例属性
 2.  attr in obj 判断一个属性是否在对象的实例/原型链上
 3.  obj[attr] !== undefined 缺点在于无法判断对象属性值为undefined的属性是否存在
+
+### 类型转换机制
+
+1.显示转换：
+
+Number(any): 纯数字字符串、false=>0、true=>1、null=>0、undefined=>NaN,symbol=>error、只有一个值的数组
+
+parseInt(string)：同上，但字符串识别'123abc'为123
+
+String()：任意
+
+Boolean()：null、‘’、+0、-0、undefined转为false
+
+2.隐式转换
+
+转换时间点：比较运算符、布尔判断语句、算数运算符
+
+布尔判断：单个数据类型直接调用Boolean()转为布尔值
+
+算数运算：除了+运算符可能转为字符串，其它都转为数字
+
+比较运算：
+
+    （1）基本数据类型比较 同类型直接比较，不同类型转为数字。
+    （2）只有一边是对象比较：先调用对象valueOf()，类型不同再调用toString()
+    （3）null和undefined之间比较返回true，只有一边是null/undefined返回false
+    （4）NaN和任意比较返回false
+    （5）除了在比较对象属性为null或者undefined的情况下，我们可以使用相等操作符（==），其他情况建议一律使用全等操作符（===）
+
+### 浅拷贝和深拷贝
+浅拷贝： Object.assign()、array.slice()、array.concat()、[...array]
+
+深拷贝：/呼
