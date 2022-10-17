@@ -535,12 +535,21 @@ Vue.directive('test', {
     {{ testData | test( value2, value3 ) | test2 }}
 ```
 
-testData数据将会被传到test函数中，经过处理然后将返回值传给test2过滤器，最后显示经过test2处理的返回值。注意test1的参数有三个，testData传给了value, value2传给了a, value3传给b
+testData数据将会被传到test函数中，经过处理然后将返回值传给test2过滤器，最后显示经过test2处理的返回值。
+
+注意test1的参数有三个，testData传给了value, value2传给了a, value3传给b
+
+调用时机：mounted之前，created之后
+
+
 
 ## 深入响应式
 1.数据响应： 对于vue实例的data，只有初始化时的数据会得到响应式处理，而且如果data数据中存在对象/数组，当修改对象的数据时，并不会响应式处理。
+
 实现响应式处理对象：Vue.set(实例数据的对象, ‘属性名称’, 属性值)；
+
 实现响应式处理对象：Vue.set(数组名称, ‘下标’, 值)；删除某个元素vm.数组.splice()
+
 2.this.$nextTick(function(){})：由于响应式是异步处理的，使用该方法后将会在DOM更新后立刻执行function(){},并且该方法返回一个promise实例对象；
 
 ## API
