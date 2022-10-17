@@ -539,7 +539,7 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
 
 注意test1的参数有三个，testData传给了value, value2传给了a, value3传给b
 
-调用时机：mounted之前，created之后
+调用时机：mounted完成之前，created之后
 
 
 
@@ -562,6 +562,9 @@ this.$on(handleName, handleFn1) //同个事件名称添加多个处理函数
 
 this.$on([handleName1, handleName2], handleFn1) //不同的事件绑定同一个处理函数
 ```
+
+### Vue.observable
+Vue.observable()接收一个对象，对象为数据，如const state = Vue.observable({ msg : '123' }),接着可以通过state.msg获取数据，并且这个state.msg数据是响应式的。Vue.observable类似Vuex的低配版
 
 ---
 ## 面试系列
