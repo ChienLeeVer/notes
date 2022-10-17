@@ -709,14 +709,7 @@ for (let item of set.entries()) {
 // ["red", "red"]
 // ["green", "green"]
 // ["blue", "blue"]
-
-
-      、d、
-      、
-
-      ’
-
-                                                    r h```
+```
 
 ### Map
 map数据结构类似对象，但是不同之处在于map数据结构的属性名除了字符串之外，还可以是其它对象
@@ -827,4 +820,48 @@ Boolean()：null、‘’、+0、-0、undefined转为false
 ### 浅拷贝和深拷贝
 浅拷贝： Object.assign()、array.slice()、array.concat()、[...array]
 
-深拷贝：/呼
+深拷贝：
+
+（1）调用第三方库，如jQuery.extend()
+
+（2）使用JSON.parse(JSON.stringify(obj)),但是无法拷贝undefined、symbol、函数
+
+（3）循环递归：
+```
+function deepClone(obj, hash = new WeakMap() ) {
+    if(obj === null ) return obj
+    if(obj instanceof Date ) return new Date(obj)
+    if(obj instanceof RegExp ) return new RegExp(obj)
+
+    if(typeof obj !== 'objec') return obj
+    if(hash.get(obj)) return hash.get(obj)
+
+    let cloneObj = new obj.constructor()
+
+    hash.set(obj, cloneObj)
+
+    for(let key in obj) {
+        if(obj.hasOwnProperty(key)) {
+            cloneObj[key] = deepClone(obj[key], hash)
+        }
+
+    }
+
+    return cloneObj
+}
+```
+分析过程：首先第一次调用该函数，hash值为空，因此hash = new WeakMap(),然后经过判断，调用let cloneObj = new obj.constructor()。其中obj为实例化对象，而obj.constructor指向其构造函数，因此这里是指new一个和obj同样原型的实例化对象依次作为返回对象，接着调用hash.set(obj, cloneObj)这一步需要做的是将obj作为键名暂时存到map中，将来通过hash.get(obj)判断是否存在，防止循环引用。接着进入循环，判断obj的属性是否为自身属性，如果是则为cloneObj同名属性赋值，值为调用deepClone()，向里面传递obj的属性和已经创建过了的hash.
+
+第二次调用该函数时，会判断传进来的参数是否是null、date、regexp,还是基础数据类型，如果是直接返回对应数据类型数据，否则参数就是一个对象，然后判断这个obj参数是否已经存在过hash中，如果是，直接从hash中返回这个，紧接着对这个参数obj属性遍历，进行新一轮的递归调用。
+
+直到第一次调用该函数传进去的第一个属性复制完，再回到第一轮遍历传递第二个属性，层层遍历和递归调用，直至所有属性复制完成。
+
+
+### 闭包
+闭包：在一个函数内部使用其它作用域的变量称之为闭包
+使用场景：创建私有变量、延长变量的生命周期
+缺点：消耗性能，内存泄漏
+
+### 作用域链
+作用域：分为全局作用域、局部作用域、块级作用域
+作用域链：当在一个作用域中使用一个未再改作用域下定义的变量时，javascript引擎会试图向外层作用域寻找直至全局作用域
