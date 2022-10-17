@@ -288,13 +288,38 @@ DNS预解析：表示客户端可能在将来的某个时间访问某个url的�
 
 ## 质量保证/错误检测
 1.分类：运行时代码错误和资源加载错误
+
 2.运行错误：
-（1）try...catch
-（2）使用window.onerror = function(){}
-注意：如果想检测跨域文件的错误在引入的文件中添加Access-Contril-Allow-Origin或者crossorigin属性。再用console.trace()打印堆栈信息
+
+    （1）try...catch
+
+    （2）使用window.onerror = function(){}
+
+   > 注意：如果想检测跨域文件的错误在引入的文件中添加Access-Contril-Allow-Origin或者crossorigin属性。再用console.trace()打印堆栈信息
+
 3.资源加载错误：
+
     （1）通过为img、script标签添加onerror事件
+
     （2）通过performance.getEntries()获取已成功加载的资源和通过document.getElementsByTagName获取的DOM标签对比即可
+
     （3）通过window.addEventListener事件采取捕获方式
 
 4.错误上报方式：Ajax通信或者(new image()).scr = 'url'，其中url为错误上报的路径
+
+### http和https的理解，区别
+http:超文本传输协议，除了能传输文本之外，还能传输图片、视频等文件，传输时对数据进行明文传输，不加密
+
+特点：
+
+    （1）简单快速，http请求只需发生请求地址和请求方法，因此http协议体积小，传输速度快
+
+    （2）灵活：支持传输任意类型的数据，通过请求头content-type字段设置
+
+    （3）无连接：每次连接只处理一次请求，请求完之后立刻断开链接
+
+    （4）无状态：不能根据上一次请求的结果处理新的请求
+
+https:在http协议的基础增加了ssl/tsl安全认证，对传输的数据进行加密。首先客户端输入url发出http请求，服务端返回ssl安全证书和公钥，客户端认证通过后产生一个随机会话密钥，然后用服务端发送过来的公钥进行加密，再发送回给服务端，服务端使用私钥解密获得会话密钥，两者通过会话密钥传输数据。
+
+区别：https更安全，使用的端口是443，http端口是80，https需要多次握手，性能不如http,https需要购买安全认证证书，要钱
