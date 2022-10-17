@@ -543,6 +543,17 @@ testData数据将会被传到test函数中，经过处理然后将返回值传�
 实现响应式处理对象：Vue.set(数组名称, ‘下标’, 值)；删除某个元素vm.数组.splice()
 2.this.$nextTick(function(){})：由于响应式是异步处理的，使用该方法后将会在DOM更新后立刻执行function(){},并且该方法返回一个promise实例对象；
 
+## API
+
+### this.$on 和 this.$emit
+this.$on可以为同个事件名称添加多个处理函数,也可以为不同的事件绑定同一个处理函数，this.$emit将会调用所有同名事件的处理函数
+```
+this.$on(handleName, handleFn1)
+this.$on(handleName, handleFn1) //同个事件名称添加多个处理函数
+
+this.$on([handleName1, handleName2], handleFn1) //不同的事件绑定同一个处理函数
+```
+
 ---
 ## 面试系列
 
