@@ -480,3 +480,22 @@ display:-webkit-box;
     <article class="right"><br /><br /><br /></article>
 </section>
 ```
+
+
+### 设备像素、css像素、设备独立像素、dpr、ppi是什么
+设备像素：即物理像素，设备一经出厂就无法改变，代表设备能够控制的最小物理单位
+
+css像素：像px这样，在不缩放的情况下1px就代表1个设备独立像素
+
+设备独立像素：一个虚拟的像素单位，在PC端不缩放的情况下1个设备独立像素就代表1设备像素
+
+dpr:设备像素比 = 设备像素/设备独立像素
+
+ppi:每英寸像素，值越大，代表每英寸屏幕能容纳的像素越多  ![ppi](./cssImage/ppi.png)
+
+### 隐藏元素的方式
+display:none、visibility:hidden、opacity: 0
+
+其它：height,width=0 或者position:absolute
+
+区别：display会不存在页面中，会触发重排，重绘，而opacity和visibility不会触发重排，opacity还能触发自身绑定事件
