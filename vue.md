@@ -733,6 +733,8 @@ class Bus {
 }
 
 Vue.prototype.$bus = new Bus()
+//或者
+Vue.prototype.$bus = new Vue()
 
 //其它组件上.vue
 this.$bus.$on('xxx',fn)
