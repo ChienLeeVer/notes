@@ -865,3 +865,41 @@ function deepClone(obj, hash = new WeakMap() ) {
 ### 作用域链
 作用域：分为全局作用域、局部作用域、块级作用域
 作用域链：当在一个作用域中使用一个未再改作用域下定义的变量时，javascript引擎会试图向外层作用域寻找直至全局作用域
+
+### JS继承方式
+原型链继承：实例化一个父类对象赋值给子类的原型对象，缺点所有子类共享同一个实例化的父类。
+
+构造函数继承：在子类构造函数内调用父类.call()，缺点无法继承父类原型对象上的属性和方法
+
+组合继承：在子类调用父类.call，同时将父类实例化对象赋值给子类原型对象，再修改子类原型对象上的constructor为指向子类
+
+原型继承：子类= Object.create(父类)实现浅拷贝，然后单独给子类添加属性，缺点引用类型内存地址指向同个地址空间
+
+寄生继承：和原型继承一样，只不过用一个函数封装起来，并且在函数内部为子类添加方法，缺点一样
+
+寄生组合继承：最优继承，所有继承的组合,类似extends
+```
+function clone(parent, child) {
+    child.prototype = Object.create(parent.prototype)
+    child.prototype.constructor = child
+}
+
+function Parent() {}
+
+function Child() {
+    Parent.call(this)
+}
+
+clone(Parent, Child)
+```
+![](./cssImage/extends.png)
+
+### this
+
+概念：this指向函数被调用时所处的执行上下文(运行时绑定)，而箭头函数没有this,this为定义该函数时所在的作用域指向的对象，而不是使用时所在的作用域指向的对象（编译时确定）
+
+绑定方法：默认绑定（全局定义的函数）、隐式绑定（全局定义的函数赋值给对象）、new绑定、显式绑定
+
+优先级：new > 显式 > 隐式 > 默认
+
+###
