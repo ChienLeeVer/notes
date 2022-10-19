@@ -7,7 +7,7 @@
 ### vue简介：
 vue为MVVM架构，使用虚拟DOM渲染，组件化。通过new vue({ el:'', data(){return {  }}, methods:{ }, filters:{ }, directives:{ } })来控制数据的变化。el表示该vue实例需要控制的对象，#xx表示控制id='xx'标签元素区域以及数据，data为一个函数，返回一个对象，对象里面是需要的数据，可以在标签中通过{{ vue实例中的数据 }}中使用。methods的value是一个对象，对象里面可以定义方法，filters里面可以定义自由化数据格式化函数。directives可以定义私有化指令。
 
-### vue的系统指令：
+### vue的系统指令与用法：
 
 1. v-bind: 即可绑定标签属性，从而动态修改属性值，如```<img v-bind:src="vue实例中data的数据或者方法返回值">```等价于```<img :src="xxx">。```
 
@@ -20,7 +20,7 @@ vue为MVVM架构，使用虚拟DOM渲染，组件化。通过new vue({ el:'', da
 
 5. v-text="data数据变量":作用与{{ }}相似，但是不会出现等待加载事件，如```<p v-text="vue实例中的data数据名称"></p>```'
 
-6. v-if="判断语句"：在标签中添加该属性后，标签将会在满足条件时显示,如```<a href="#" v-if="xxx">```,可以与v-else一起使用，必须在v-if或者v-else-if后面一起使用。指令为真正的条件渲染，会删除/添加dom元素，并销毁/重建内部的事件监听器和子组件，并调用组件的生命周期函数，会消耗性能。
+6. v-if="判断语句"：在标签中添加该属性后，标签将会在满足条件时显示,如```<a href="#" v-if="xxx">```,可以与v-else一起使用，必须在v-if或者v-else-if后面一起使用，中间不能夹杂任何其它标签。指令为真正的条件渲染，会删除/添加dom元素，并销毁/重建内部的事件监听器和子组件，并调用组件的生命周期函数，会消耗性能。并且v-if和v-else需要为其添加key，防止复用组件
 
 7. v-show=“判断语句”：在标签中添加该属性后，标签将会在满足条件时显示。只是单纯css的display切换，消耗性能较少，适合频繁切换。
 
@@ -47,7 +47,7 @@ new vue({
 
     就可以像v-if那样使用v-focus了。
 
-11.为标签绑定多个class：
+11. 为标签绑定class：
 
 ```
 <div id="app">
@@ -96,6 +96,34 @@ new vue({
         })
     </script>
 ```
+13. 计算属性：computed：{},里面的方法可以直接使用，用于对data中的数据进行加工，对执行同一种操作的数据进行抽象分离，提高复用性，并且计算属性具有缓存的作用，如果计算属性的所用到的数据没有发生变化，那么计算属性不会重新执行
+
+14. 数组：vue规定当data中的数据类型为Array时，只能使用push、pop、shift、unshift、splice、sort、reverse方法来修改数组，才能响应式处理数据，而通过下标或者直接修改数组长度的方式无法响应式处理。如果需要使用其它方法，只能修改其引用，如this.arr = [] 或者set方法
+
+15. 对象：只有在data中定义的对象及其属性可以响应式处理。新增的对象属性不会得到响应式处理。需要响应式处理可以修改this.odlObj = Object.assign({},this.oldObj, newObj)其引用，或者使用Vue.set / vm.$set
+
+### vue中常见的问题
+1.  如何解决table标签内使用组件，组件显示到table外或者失效的问题？ 答：table标签里面使用组件，需要为tr绑定is属性，值为组件名称。此类情况会发生在ul>li, select>option, table>tr>td上，以此类推
+```
+//失效情况：
+<select>
+    <item/>
+</select>
+
+Vue.component('item',{
+    template:'<option>1</option>'
+})
+
+//有效情况
+<select>
+    <option is="item">
+</select>
+
+Vue.component('item',{
+    template:'<option>1</option>'
+})
+
+```
 
 ### 生命周期函数流程图
 <img src="http://img.smyhvae.com/20180611_2130.png">
@@ -131,9 +159,11 @@ new vue({
 ```
 
 一个vue实例将会经过8个生命周期函数,beforeCreate表示申请为数据申请内存空间，变量尚未初始化，created表示数据已经初始化完毕，beforeMount表示模板编译完成生成虚拟DOM但还没挂载到页面中，mounted表示模板已经挂载到页面中，可以获取DOM元素，beforeUpdata表示数据已经更新，但是没有渲染到页面中，updataed表示数据已经重新渲染完毕并显示到页面中。beforeDestroy表示在实例销毁之前，destroyed表示已经解除绑定管控区域和子区域，解除事件绑定，解除事件监听器，此时无法获取DOM元素。
-（1）关于beforeUpdated说明：因为vue内部对数据的更新不是立刻执行，而是采取了异步队列。
-（2）如果在数据更新之后想执行某些操作，则this.$nextTick(()=>{
-    //表示在DOM更新循环之后立即执行某些操作
+
+ （1）关于beforeUpdated说明：因为vue内部对数据的更新不是立刻执行，而是采取了异步队列。
+
+ （2）如果在数据更新之后想执行某些操作，则this.$nextTick(()=>{
+//表示在DOM更新循环之后立即执行某些操作
 })。this.$nextTick()可以在created等钩子函数中使用，无论dom是否渲染，nextTick都会等到异步队列渲染完这个DOM后立刻执行，与nextTick（)处在哪个位置没关系。该方法返回一个Promise
 
 ### ajax请求
