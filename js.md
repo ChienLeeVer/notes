@@ -902,4 +902,40 @@ clone(Parent, Child)
 
 优先级：new > 显式 > 隐式 > 默认
 
-###
+### 事件模型
+
+概念：原始事件模型（DOM0事件，onclick之类），标准事件模型（OM2事件，addEventListener），ie事件模型。注：DOM1标准没有定义事件相关的内容
+
+原始事件模型：绑定速度快（可能页面尚未加载完就绑定完事件）,只支持冒泡，并且同类事件只能绑定一次，多次绑定会覆盖。移除方式将事件监听设置为null
+
+标准事件模型：有事件捕获、事件处理、事件冒泡三个过程，支持捕获和冒泡，同类事件可以绑定多个，第三个参数表示是否在捕获阶段执行。
+
+ie事件模型：只有事件处理和事件冒泡阶段，事件绑定方式attachEvent(eventType, fn)，事件移除方式detachEvent(eventType)
+
+### typeof 和 instanceof
+
+概念：typeof判断一个变量的数据类型，返回'number'，'string','symbool','function','boolean','undefined','object'。instanceof判断一个构造函数的prototype属性是否出现在实例化对象的原型链上。
+
+区别：
+    1.typeof返回一个字符串类型的值，值表示变量的数据类型，instanceof返回一个布尔值
+
+    2.typeof只能判断基础数据类型（null和function特殊除外），instanceof只能判断复杂数据类型，不能判断基础数据类型。
+
+解决办法：Object.prototype.toString.call()。
+```
+function getType(obj) {
+    let type = typeof obj
+    if(type !== 'object') {
+        return type
+    }
+
+    return Object.prototype.toString.call(obj).replace(/^[Object (\S+)$]/, '$1')
+}
+```
+
+### 事件代理
+概念：将一个元素的响应事件函数委托到另一个元素上。
+
+应用场景：为ul里的li项添加同样的事件函数，可以在ul处添加事件函数，通过event.target.nodeName判断是否为li项。另一个是li项动态增加或减少，如果为每个li项添加，则删除时又要移除事件，而通过事件代理的方式则不用。
+
+注意：focus,blur,mousemove,mouseout不能同事件代理。前者没有冒泡，后者通过定位计算性能消耗过大。
