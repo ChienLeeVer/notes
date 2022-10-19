@@ -239,7 +239,7 @@ Vue.component('componentDefine',{
         template : '<div>{{ this.title }}</div>'
     })
 </script>
-//子组件不能修改props中的属性值，特别是传递的数据为对象或者数组
+//子组件不能修改props中的属性值，特别是传递的数据为对象或者数组,可以在data中拷贝或者computed中拷贝
 ```
 
 3. 实现动态组件：即一个标签中绑定不同的组件
