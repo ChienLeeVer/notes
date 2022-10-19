@@ -26,9 +26,11 @@ vue为MVVM架构，使用虚拟DOM渲染，组件化。通过new vue({ el:'', da
 
 8. v-for="item in 对象/数组变量"：在标签中添加该属性后，将会遍历该标签，此时在子标签内可以通过{{ item }}的方式访问item临时变量。如```<p v-for="item in arr" :ket="唯一id">{{ item }}</p>```此时``data(){ return { arr: ['one', 'two', 'three', 'four']}}```，会生成4个p标签,文本分别为one two three four。当然v-for="(item, index) in arr"中, index为数组索引/对象属性名。key的作用为vue提供唯一的key，方便vue追踪每个节点，以便原地更新数据而不用重新渲染，key类型一般为字符串或数值
 
-9. 自定义修饰符：修改全局配置，如 ```Vue.config.keyCodes.f2 = 113;此时就可以使用修饰符f2了```，如```<input type="button" @keyup.f2="methods中
+9.  v-once: 标签中使用这个命令后，只创建一次，并缓存这个标签，重新渲染时不会创建，直接从缓存中取。
 
-10. 自定义系统指令：（1）全局定义系统指令：如```Vue.directive('focus', { bind(el){},inserted(el){},updated(el){}});```注意bind函数只执行一次，并且在标签还没插入dom之前就执行了，inserted表示在插入dom后执行且只执行一次，updated方法在标签数据更新后执行，可能执行多次，el为必须的参数表示当前操作的dom对象，el等价document.getElementById()获得的对象；
+10.  自定义修饰符：修改全局配置，如 ```Vue.config.keyCodes.f2 = 113;此时就可以使用修饰符f2了```，如```<input type="button" @keyup.f2="methods中
+
+11. 自定义系统指令：（1）全局定义系统指令：如```Vue.directive('focus', { bind(el){},inserted(el){},updated(el){}});```注意bind函数只执行一次，并且在标签还没插入dom之前就执行了，inserted表示在插入dom后执行且只执行一次，updated方法在标签数据更新后执行，可能执行多次，el为必须的参数表示当前操作的dom对象，el等价document.getElementById()获得的对象；
 （2）私有化系统指令：只能在该vue实例管控下使用的指令，如
 
 ```
@@ -47,7 +49,7 @@ new vue({
 
     就可以像v-if那样使用v-focus了。
 
-11. 为标签绑定class：
+12. 为标签绑定class：
 
 ```
 <div id="app">
@@ -74,7 +76,7 @@ new vue({
     </script>
 ```
 
-12. 为标签绑定内联样式
+13. 为标签绑定内联样式
 
 ```
 <div id="app">
@@ -96,11 +98,11 @@ new vue({
         })
     </script>
 ```
-13. 计算属性：computed：{},里面的方法可以直接使用，用于对data中的数据进行加工，对执行同一种操作的数据进行抽象分离，提高复用性，并且计算属性具有缓存的作用，如果计算属性的所用到的数据没有发生变化，那么计算属性不会重新执行
+14. 计算属性：computed：{},里面的方法可以直接使用，用于对data中的数据进行加工，对执行同一种操作的数据进行抽象分离，提高复用性，并且计算属性具有缓存的作用，如果计算属性的所用到的数据没有发生变化，那么计算属性不会重新执行
 
-14. 数组：vue规定当data中的数据类型为Array时，只能使用push、pop、shift、unshift、splice、sort、reverse方法来修改数组，才能响应式处理数据，而通过下标或者直接修改数组长度的方式无法响应式处理。如果需要使用其它方法，只能修改其引用，如this.arr = [] 或者set方法
+15. 数组：vue规定当data中的数据类型为Array时，只能使用push、pop、shift、unshift、splice、sort、reverse方法来修改数组，才能响应式处理数据，而通过下标或者直接修改数组长度的方式无法响应式处理。如果需要使用其它方法，只能修改其引用，如this.arr = [] 或者set方法
 
-15. 对象：只有在data中定义的对象及其属性可以响应式处理。新增的对象属性不会得到响应式处理。需要响应式处理可以修改this.odlObj = Object.assign({},this.oldObj, newObj)其引用，或者使用Vue.set / vm.$set
+16. 对象：只有在data中定义的对象及其属性可以响应式处理。新增的对象属性不会得到响应式处理。需要响应式处理可以修改this.odlObj = Object.assign({},this.oldObj, newObj)其引用，或者使用Vue.set / vm.$set
 
 ### vue中常见的问题
 1.  如何解决table标签内使用组件，组件显示到table外或者失效的问题？ 答：table标签里面使用组件，需要为tr绑定is属性，值为组件名称。此类情况会发生在ul>li, select>option, table>tr>td上，以此类推
@@ -357,7 +359,8 @@ Vue.component('componentDefine',{
 </script>
 ```
 
-如果想为插槽定义一个名字，那么可以这样使用,为模板中的slot的name属性赋值，然后在组件标签中使用template v-slot:name的值，就可以绑定slot了
+如果想为插槽定义一个名字，那么可以这样使用,为模板中的slot的name属性赋值，然后在组件标签中使用***template模板占位符*** v-slot:name的值，就可以绑定slot了。
+注意：具名插槽必须使用template
 
 ```
 <template id="t-slot">
