@@ -17,6 +17,15 @@
 
     3.数据类型：基本数据类型和引用数据类型，基本数据类型有Number、String、Undefined、Null、Symbol、bigInt、Boolean,引用数据类型有Object,如array、function、date、error···。基本数据类型存储在栈空间，引用数据类型存储在堆空间；
 
+        （1）number:js内部所有数字存储为64bit（8字节）浮点数，需要整数时转为32bit整数。第一位为符号位，2-12位为指数位（11个）决定数值大小，后面全为小数点位决定精度大小。而第一位默认为1，因此64-11 = 53位为js提供的有效数字范围。因此15位以内的十进制数字都可以保持精度。数字 = (-1)^符号位 * 1.xx...xx(53位) * 2^指数部分
+
+        （2）string:字符串base64转码，支持将ASCII码（0-31）无法显示的字符转为0-9、a-z、A-Z、+、/（共64位）能够显示的字符，btoa()将ASCII码转为base64，atob()将base64转为ASCII码。如果要将非ASCII码转为base64，则btoa(encodeURIComponent(str)),如果需要转回来则 decodeURIComponent(atob(str))
+
+        （3）对象：
+            a.delete命令只能删除自身属性，不能删除继承属性，只有设置属性为不能删除时才返回false，否则无论属性是否存在都返回true.
+
+            b.with语句用于统一操作一个对象的属性，如var obj = {a:1,b:2} with(obj){ a = 2; b = 3}，在with语句内只能操作obj已有的属性，如果操作不存在的属性，等价于全局定义一个变量，并不会给对象赋值，如 var obj = {a:1,b:2} with(obj){ a = 2; b = 3; c =4} obj.c; //undefined c; // 4
+
     4.typeof获取变量的数据类型，注意，typeof null -> 'object'; typeof undefined -> 'undefined';
 
     5.流程控制语句分为：顺序结构、选择结构、循环结构；
