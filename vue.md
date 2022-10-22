@@ -461,11 +461,17 @@ Vue.component('componentDefine',{
 ### 动画/过渡
 
 1. 过渡：
+
 （1）需要过渡的标签都包含在transition标签中。过渡效果总共进入和离开阶段，每个又分为开始，过程，结束三个点。
-（2）进入阶段：v-enter表示在元素被插入dom之前生效,一帧后移除，v-enter-active表示元素插入时生效，插入结束后移除，v-enter-to表示元素插入后的一帧生效，插入结束后移除。
+
+（2）进入阶段：v-enter表示在元素被插入dom之前生效,一帧后移除，v-enter-active表示元素插入时生效，插入结束后移除，v-enter-to表示元素插入后的一帧生效，插入结束后移除。注释：v-enter表示用户想让元素显示在页面之前的状态，而v-enter-active则是持续一整个过程。举例opacity,v-enter应设置opacity为0，因为我们知道，之后元素会自动设置为opacity:1,而这一个过程用v-enter-active来监听属性的变化即transition:opacity 2s。因此这样样式表示从opacity:0 到opacity：1之间的动画过渡效果。同理leave也是如此
+
 （3）离开阶段：v-leave在元素离开前触发生效，下一帧移除效果，v-leave-active在元素离开期间生效，离开后移除效果，v-leave-to在元素离开后触发生效，一帧后移除。一般v-enter-to和v-leave用的少。
+
 （4）如果transition标签的name属性设置为xx,那么在设置style时，就可以设置为xx-enter、xx-leave；
+
 （5）如果过渡中style同时存在transition和amination,并且想在某个事件内完成，可以```<transition :duration="1000"></transition>```表示总时间为1秒，或者```<transition :duration="{ enter: 500, leave: 800}"></transition>```;
+
 （6）如果想在js中控制样式,则可以
 
 ```
@@ -481,7 +487,10 @@ methods : {
 （7）如果需要控制不同元素之间的过渡效果先后顺序，则可以通过修改mode属性来实现，in-out表示新元素先过渡进入，旧元素后过渡离开。out-in表示旧元素先过渡离开，新元素后过渡进入。
 
 ```
-<transition naem="xxx" mode="in-out"></transiiton>
+<transition naem="xxx" mode="in-out">
+    <div v-if="" :key="hello">Hello</div> //一定要添加key,否则vue直接复用
+    <div else :key="world">World</div>
+</transiiton>
 ```
 
 不同组件之间的过渡，可以使用动态组件
@@ -492,7 +501,33 @@ methods : {
 </transiiton>
 ```
 
+
 （8）如果需要同时渲染整个列表，如v-for，transition是行不通的，transition只能渲染一个节点/在多个节点切换来渲染一个节点，而列表不需要切换，这就需要用到transiotn-group
+```
+<transition-group>
+    <div v-for="(item, index) in items" :key="xx"></div>
+</transition-group>
+//等价于
+<transition>
+    <div></div>
+</transition>
+...
+<transition>
+    <div></div>
+</transition>
+```
+
+（9）使用animate.css动画库，设置刷新页面时，第一次也有动画
+```
+<transition name="fade" mode=""
+    appear
+    enter-active-class="animate__animated animate__swing"
+    leave-active-class="animate__animated animate__shakeX"
+    appear-active-class="animate__animated animate__swing"
+>
+</transition>
+//apear表示初始渲染过度，必须设置appear属性，然后再设置appear-active-class、appear-to-class、appear-class等。
+```
 
 ## 可复用性和组合
 ### 混入
