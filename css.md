@@ -338,7 +338,7 @@ display:-webkit-box;
 13. calc() 函数用于动态计算长度值;
 14. translate3d(x,y,z);其中x,y,z不能使用百分比，3D中z轴都不能用百分比，被默认无效；
 15. Object-fit: cover来等比例裁剪图片尺寸，这样图片就不会被拉伸或压缩;
-16. flex:1 = flex: 1 1 auto;
+16. flex:1 = flex: 1 1 0%; flex:auto = 1 1 auto;
 17. a标签的color不能被继承，vertical-align和text-decoration不能被继承
 
 ### CSS单位
@@ -499,3 +499,68 @@ display:none、visibility:hidden、opacity: 0
 其它：height,width=0 或者position:absolute
 
 区别：display会不存在页面中，会触发重排，重绘，而opacity和visibility不会触发重排，opacity还能触发自身绑定事件
+
+### 元素垂直居中的方式
+
+内联元素垂直居中：```line-height = height; text-align = center```
+
+多行文本垂直居中：参照table垂直居中
+
+块级元素垂直居中：
+
+1.利用position：
+
+（1）未知宽高的情况下：```position:absolute; top:0; left:0; right:0; bottom:0; margin:auto;```
+
+（2）已知宽高的情况下：```position:absolute; top:50%;left:50%;margin-left:-自身一半;margin-top:-自身一半;```
+
+（3）未知宽高的情况下：```position:absolute; top:50%;left:50%;transform:translate(-50%,-50%);```
+
+2.利用table:
+
+    ```
+    .father {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .son {
+        display: inline-block;
+    }
+    ```
+3.利用flex布局：
+```
+ .father {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+```
+4.利用grid布局：
+```
+.father {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+```
+
+### 两栏布局、三栏布局
+
+1.两栏布局：
+
+（1）左浮动、右margin-left
+
+（2）flex:左宽度，右flex:1，父align-items:flex-start(高度自适应)
+
+2.三栏布局：
+
+（1）左右浮动、中间margin:缺点在于主体内容最后加载
+
+（2）左右绝对定位，中间margin
+
+（3）table:父display:table,子display:table-cell,左右设置宽度，中间宽度auto
+
+（4）flex布局
+
+（5）grid布局
