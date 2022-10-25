@@ -1043,7 +1043,7 @@ function ajax(option) {
 
     相同：都能改变函数运行时的上下文，第一个参数都传递this，如果为空/undefined/null则默认为window
 
-    不同：apply第二个参数传递的是一个数组，call第二个参数传递的是一个参数列表。apply和call会立即执行函数，而bind不会立即执行。
+    不同：apply第二个参数传递的是一个数组，call第二个参数传递的是一个参数列表,bind可以多次传递。apply和call会立即执行函数，而bind不会立即执行。
 
 
 ```
