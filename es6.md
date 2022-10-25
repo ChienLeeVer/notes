@@ -49,3 +49,22 @@ set是一种叫做集合的数据结构。map是一种叫做字典的数据结�
 set的方法有：add、delete、has、clear 属性为size
 
 map的方法有：set、delete、has、clear 属性为size
+
+### proxy
+
+概念：对象的代理，实现对象的基本操作的拦截和自定义事件
+
+使用：
+
+        new Proxy(对象/对象数组, {
+            get(target, propName, proxy){
+                //能够拦截对目标对象的某个属性的读取，执行某些操作
+                //target为目标对象，propName为属性名，proxy为proxy对象实例
+                //Reflext能读取对象的默认行为，如Reflect.get(对象，属性)就能获取对象属性值
+                return Reflect.get(target, propName)
+            },
+            set( target, propName, newvalue, proxy ){
+
+            },
+            ...
+        })

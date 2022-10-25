@@ -979,3 +979,83 @@ function getType(obj) {
 应用场景：为ul里的li项添加同样的事件函数，可以在ul处添加事件函数，通过event.target.nodeName判断是否为li项。另一个是li项动态增加或减少，如果为每个li项添加，则删除时又要移除事件，而通过事件代理的方式则不用。
 
 注意：focus,blur,mousemove,mouseout不能同事件代理。前者没有冒泡，后者通过定位计算性能消耗过大。
+
+### new操作符
+
+ 过程：先创建一个空对象，然后将构造函数的原型对象绑定在新建对象的原型链上，接着调用构造函数并将修改this为新建对象，如果构建函数返回的结果是一个对象则返回该结果，否则直接返回新建对象。
+
+```
+function mynew(Func, ...args) {
+    let obj = {}
+    obj.__proto__ = Func.prototype
+    let result = Func.apply(obj, args)
+    return result instanceof Object ? result : obj
+}
+```
+
+### Ajax
+
+原理：通过XMLHttpRequest对象向服务器发送异步请求，从服务器获得数据，然后用js来修改dom。例子：老板通知秘书去找小李报告工作，接着老板做其他事，秘书找到小李后告诉他，小李接到通知后来到老板的办公室，老板处理完事情后听小李报告。秘书就相当于XMLHttpRequest对象
+
+实现过程：
+
+1.新建一个XMLHttpRequest对象
+
+2.使用XHR对象的open(method, url[,async][,name][,password])方法与服务器建立连接
+
+3.使用send(data)方法向服务器发送数据,如果是get方法则不用
+
+4.为xhr对象的onstatuschange添加一个监听函数，xhr.status表示服务器返回的状态，xhr.readyState表示服务器的通信状态（0表示open尚未被调用，1表示open被调用，send尚未调用，2表示send被调用，响应头和响应状态已返回，3表示已经接收到部分数据，4表示数据接收完成）。每当readyState变化时将会调用监听函数。xhr.responseText表示接收到的数据
+
+```
+//封装ajax
+function ajax(option) {
+    let xhr = new XMLHttpRequest()
+    option = option || {}
+    option.type = (option.type || 'GET').toUpperCase()
+    option.dataType = option.dataType || 'json'
+    const params = option.data
+
+    if(option.type === 'GET') {
+        xhr.open('GET', option.url + '?' + params, true)
+        xhr.send(null)
+    } else if(option.type === 'POST') {
+        xhr.open('POST')
+        xhr.send(params)
+    }
+
+    xhr.onreadyChanged = function() {
+        if(xhr.readyState === 4) {
+            let statis = xhr.status
+            if(status >= 200 && status < 300) {
+                option.success && option.success(xhr.responseText, xht.response)
+            } else {
+                option.fail && option.fail(status)
+            }
+        }
+    }
+}
+```
+
+### apply、call、bind
+
+区别：
+
+    相同：都能改变函数运行时的上下文，第一个参数都传递this，如果为空/undefined/null则默认为window
+
+    不同：apply第二个参数传递的是一个数组，call第二个参数传递的是一个参数列表。apply和call会立即执行函数，而bind不会立即执行。
+
+
+```
+//实现一个bind
+Function.prototype.bind = function(context) {
+    if(typeof this !== 'function') return new TypeError('Error')
+
+    const args = [...arguments].slice(1)
+    const fn = this
+
+    return function Fn(){
+        return fn.apply(this instanceof Fn ? new fn(...arguments) : context, args)
+    }
+}
+```
