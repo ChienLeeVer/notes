@@ -836,4 +836,82 @@ this.$bux.$emit('xx')
 
 获得缓存数据：使用组件路由守卫beforeRouteEnter，在参数next的回调函数中传递vm.getData()。或者在actived钩子中使用this.getData()也能获取数据。
 
-注意：使用缓存后，新增了actived和deactivated钩子。并且除了这两个钩子外，重新访问缓存组件不会再次调用组件的生命周期钩子。0
+注意：使用缓存后，新增了actived和deactivated钩子。并且除了这两个钩子外，重新访问缓存组件不会再次调用组件的生命周期钩子。
+
+### vue中的修饰符
+概念：vue的修饰符帮助处理了许多dom细节
+
+分类：
+
+（1）表单修饰符：lazy、number、trim。用在v-model中
+
+        .lazy:在输入框完成输入完成并且失去焦点之后才更新value
+
+        .number:能够将用户输入的数据自动用parseInt()转为数字，无法处理则返回原始数据
+
+        .trim：去除输入的首空格
+
+（2）事件修饰符：stop、prevent、self、once、passive、native
+
+        .stop:阻止事件冒泡
+
+        .prevent:阻止事件的默认行为
+
+        .self:只触发自身的事件,不触发传递过来的事件
+
+        .once:事件只触发一次
+
+        .passive:用在滚动事件中，等滚动完成才触发事件
+
+        .native:组件监听事件的函数为js的原生函数，而不是methods中的自定义事件
+
+（3）鼠标修饰符：left、right、middle。修饰click事件
+
+（4）键盘修饰符：修饰keyup、keydown事件，有enter、keycode等修饰符。
+
+        其中keycode可以自定义：Vue.config.KeyCodes.xx = xx
+
+（5）属性修饰符：props、camel
+
+        props:能够对一个属性进行隐藏，不暴露在html结构汇总
+
+        camel：将命名转为驼峰命名
+
+
+### 自定义指令
+概念：像v-开头的都是指令，vue提供了自定义指令的方法；
+
+        全局组册：Vue.directive('指令名',{
+
+        })
+
+        局部组册：diretives:{
+            '指令名':{
+                bind(el, binding, vnode, oldVnode){
+                    //bind钩子用于数据初始化
+                    //el唯一可修改对象，可以直接操作原生dom
+                    //binding为指令的对象里面包含了指令值之类的数据
+                    { name, value, oldValue, expressiong, arg, modifiers } = binding;//解析构值
+                },
+                inserted(){
+                    //inserted钩子表示插入父节点时调用，但是此时只能鞥保证父节点存在，不能保证已经插入父节点中
+                },
+                updated(){
+                    //vnode更新时调用，无法保证值是否更新完成，子组件也有可能还没更新完成
+                },
+                componentUpdated(){
+                    //保证组件及其子组件内的值更新完成之后再调用
+                },
+                unBind(){
+                    //解绑时调用
+                }
+            }
+        }
+
+应用场景：图片懒加载、阻止表单重复提交
+
+### 过滤器
+    filter：在不改变原始数据的情况下对数据进行加工处理，再调用处理。Vue3中已废弃
+
+    应用场景：单位转换、时间格式化、文本格式化、数字打点
+

@@ -630,15 +630,25 @@ box.onclik = debounce(function(){
 
 ```
 function throttle( fn, delay) {
-    let oldTime = new Date()
-    return function() {
+    let oldTime
+    let timer
+    return function(...args) {
         let context = this
-        let args = aguments
         let newTime = new Date()
+        if(!oldTime) oldTime = newTime
+        clearTimeout(timer)
+
         if( newTime - oldTime > delay) {
             oldTime = new Date()
             fn.apply(context, args)
+            clearTimeout(timer)
+            return
         }
+        timer = setTimeout(function(){
+            oldTime = new Date()
+            timer = null
+            fn.apply(context, args)
+        }, delay)
     }
 }
 ```
