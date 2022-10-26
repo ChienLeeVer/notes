@@ -969,3 +969,27 @@ this.$bux.$emit('xx')
 
     应用场景：单位转换、时间格式化、文本格式化、数字打点
 
+### 虚拟DOM
+
+概念：对真实dom的抽象，以JS对象（VNode）作为基础的树，对象的属性来描述节点，一个对象至少包含标签名、属性、子元素对象，最终通过一系列操作映射到真实环境中。
+
+原因：直接操作真实DOM，需要耗费大量的性能。如十个dom节点，更新10个节点，直接操作dom的话，在更新第一个节点的时候，浏览器会从构建dom树开始执行一次流程，最终执行10次流程，而虚拟dom采用diff算法来更新节点，只执行一次更新流程。
+
+实现：代码略
+
+### diff算法
+
+概念：diff算法是一种对比算法，对比新旧虚拟dom，找出变化的虚拟dom并变更对应真实的dom
+
+特点：diff算法深度优先，比较的是同层节点不会跨层比较，并且只会从两边到中间比较。
+
+实现过程：无论是旧虚拟dom还是新虚拟dom都有startIndex和endIndex。一开始新虚拟dom从startIndex、endIndex开始与旧虚拟dom的startIndex或者endIndex互相比较，如果节点相同则直接复用对应的旧节点并移动新虚拟dom的startIndex、endIndex和旧虚拟dom的startIndex或者endIndex，否则创建一个新的真实DOM节点并移动新虚拟DOM的startIndex。循环以上过程直至旧VNode的startIndex > endIndex，如果此时新VNode的startIndex < endIndex则后面的节点都视作新节点直接创建并插入。
+
+### axios的封装
+
+概念：
+
+1.配置config.js文件，内容为根据不同的环境（process.env.NODE_ENV === 'pro or dev'）设置baseURL及其其它基础路径。并将其放在一个对象中暴露出来
+
+2.配置service.js文件，内容为引入axios并创建axios对象（axios.create()），传入配置信息如请求头信息、请求时间、跨域设置。接着调用axios对象的interceptor.request.use()和interceptors.response.use()方法设置请求拦截器（token验证）和请求响应器，最后将这个对象暴露出其
+

@@ -68,3 +68,15 @@ map的方法有：set、delete、has、clear 属性为size
             },
             ...
         })
+
+### modules
+
+概念：modules即模块，能够独立完成某个功能和单独命名的数据结构和程序代码的集合
+
+使用：ES6的模块通过export命令对外暴露接口，允许外部文件通过import命令的方式使用暴露的变量，一般需要为引入的变量命名，如果不需要命名，则需要export default，一般情况下引入的变量不能修改，除非是对象则可以修改它的属性。import命令会提升到顶部，并且支持动态引入模块。
+
+比较：AMD、CMD、CommonJS、ESM
+
+<https://juejin.cn/post/6844903955282165773>
+
+
