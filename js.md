@@ -32,6 +32,11 @@
 
     6.对象：内置对象、宿主对象（BOM/DOM）、自定义对象；
 
+        (1)Object:
+            a.Object.keys(obj);与Object.getOwnPropertyNames(obj);均返回自身属性，但是后者还可以返回不可枚举的属性.
+
+            b.除了原始对象外，其它对象类型Array,Function,Date都重写了toString()方法，数组返回自身值...因此如果想通过toString()判断数据类型，需要调用Object.prototype.toString.call()
+
     7.基本包装类型：基本数据类型不能绑定属性和方法，但是引用数据类型可以，比如var a = '123sf';不可以，但是var a = new String('123sf');可以绑定属性和方法。还有Numebr()、Boolean()也是包装类可以将基本数据类型的数据转换为对象。
 
     8.内置对象：
