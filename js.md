@@ -1064,3 +1064,82 @@ Function.prototype.bind = function(context) {
     }
 }
 ```
+
+### 事件循环
+
+概念：JS为单线程，同一时间只能做一件事。JS里的任务分为同步任务和异步任务，异步任务又分为微任务和宏任务，JS会按代码顺序执行，遇到同步任务立刻执行，遇到异步任务则加入异步队列中，等待同步任务执行完毕，检查异步队列，先执行微任务，每执行完一个微任务都会检查是否有同步任务加入，所有微任务执行完之后执行宏任务，每个宏任务执行完之后会检查是否有同步任务和微任务加入。
+
+分类：
+
+    1.微任务：promise.then、process.nextThick、MutationObsever
+    2.宏任务：setTimeout/setInterval、script、postMessage..
+
+async/await:
+
+    async用于声明一个异步方法，返回一个promise对象，而await用于等待异步方法执行，如果await跟着promise对象，则返回该对象的结果，如果是其它值则返回其它值，await会阻塞后面的代码，会将后面的代码加入异步队列中，当await等待的方法执行完之后，await后面的代码不会立刻执行，而是检查外部是否有同步任务，等待同步任务执行完之后才执行。
+
+
+### BOM
+
+概念：BOM(浏览器对象模型)，是浏览器窗口与页面内容交互的接口对象。
+
+区别于DOM:
+
+    1.DOM是文档对象模型，BOM是浏览器对象模型
+    2.DOM的作用是操作DOM元素，BOM是提供页面和浏览器窗口交互的接口
+    3.DOM的顶级对象是document, BOM的顶级对象是window。
+    4.DOM是W3C定义的标准规范， BOM是浏览器厂商定义的
+
+分类：
+
+1.  window: JS中的window既是全局对象也是BOM的顶级对象，浏览器控制窗口的方法有：
+
+    1.  moveTo(x, y)/moveBy(x, y):moveto表示将窗口移动到距离屏幕（x, y）处，moveBy表示相对窗口移动（x， y）
+
+    2.  resizeTo(x, y)/resizeBy(x, y) ：resizeTo表示将窗口大小缩放到（x, y）,而resizeBy表示相对于窗口缩放(x, y),当x,y为负值时表示缩放。
+
+    3.  scrollTo(w, h)/scrollBy(w, h) ： scrollTo表示滚动条移动到指定宽度和高度，scollBy表示滚动条相对当前位置滚动宽度和高度
+
+    4.  window.open() ：打开一个指定页面并跳转/打开一个新的窗口。
+
+2.  location: 获取url的信息的对象
+
+    1.  location.href :返回完整的URL
+
+    2.  location.protocol: 返回协议
+
+    3.  location.host: 返回域名和端口号
+
+    4.  location.hostname: 返回域名
+
+    5.  location.port: 返回端口号
+
+    6.  location.pathname: 返回文件夹路径
+
+    7.  location.search: 返回参数
+
+    8.  location.hash : 返回地址中#后面的内容
+
+            注释：除了hash外，修改其它属性都会重新加载页面
+
+    9.  location.reload(boolean): 重新加载页面，参数为true时表示忽视缓存重新加载页面，参数为false（默认值）时表示当页面内容没有发生时使用缓存
+
+3.  navigator: 获取浏览器的属性，区分浏览器的类型
+
+    1.  navigator.userAgent:返回用户代理字符串
+
+4.  screen: 获取用户屏幕设备的信息，常见方法如下
+
+    1.  screen.width/height：获取屏幕的宽度/高度
+
+    2.  scrren.top/left: 获取当前窗口距离屏幕顶部/左部的距离
+
+5. history: 获取浏览器URL的历史记录，可以通过参数前后跳转
+
+    1.  history.go(): 参数为整数表示相对于当前地址，整数表示前进几个地址，负数表示后退几个地址，参数为字符串时表示跳转到URL中包含字符串的地址
+
+    2. history.forward()：向前跳转
+
+    3. history.back(): 向后跳转
+
+    4. history.length: 获取历史记录
