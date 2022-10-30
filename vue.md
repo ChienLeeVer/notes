@@ -985,6 +985,19 @@ this.$bux.$emit('xx')
 
 实现过程：无论是旧虚拟dom还是新虚拟dom都有startIndex和endIndex。一开始新虚拟dom从startIndex、endIndex开始与旧虚拟dom的startIndex或者endIndex互相比较，如果节点相同则直接复用对应的旧节点并移动新虚拟dom的startIndex、endIndex和旧虚拟dom的startIndex或者endIndex，否则创建一个新的真实DOM节点并移动新虚拟DOM的startIndex。循环以上过程直至旧VNode的startIndex > endIndex，如果此时新VNode的startIndex < endIndex则后面的节点都视作新节点直接创建并插入。
 
+如果新旧子节点都存在key，那么会根据oldChild的key生成一张hash表，用S的key与hash表做匹配，匹配成功就判断S和匹配节点是否为sameNode，如果是，就在真实dom中将成功的节点移到最前面，否则，将S生成对应的节点插入到dom中对应的oldS位置，S指针向中间移动，被匹配old中的节点置为null。
+
+如果没有key,则直接将S生成新的节点插入真实DOM（ps：这下可以解释为什么v-for的时候需要设置key了，如果没有key那么就只会做四种匹配，就算指针中间有可复用的节点都不能被复用了）
+
+
+Vnode:新节点 oldNode：旧节点
+
+完整过程：
+
+首先数据发生变化时会通过set方法调用Dep.notify通知所有订阅者Watcher，Watcher会调用patch函数，patch函数里传入新旧虚拟节点，首先比较两个节点是否相同（key,标签名，文本，注释节点，属性），如果不相同则获取旧节点的真实dom,以及它的父节点，将新节点真实化并插入旧节点真实DOM的父节点之中，旧节点真实DOM之前并删除旧节点dom。如果相同，则会比较新旧节点是否为同一个对象，如果是同一个对象就会直接返回，如果不是同一个对象就会判断他们的子节点是否相同。如果旧节点没有子节点，那么直接真实化DOM新节点的子节点并插入，如果新节点没有子节点，则直接删除旧节点的子节点和对应DOM,如果新旧节点都有子节点则开始比较。
+链接：<https://juejin.cn/post/6844903607913938951>
+
+
 ### axios的封装
 
 概念：
