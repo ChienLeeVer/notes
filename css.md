@@ -493,6 +493,41 @@ dpr:设备像素比 = 设备像素/设备独立像素
 
 ppi:每英寸像素，值越大，代表每英寸屏幕能容纳的像素越多  ![ppi](./cssImage/ppi.png)
 
+### 1px问题
+
+概念：pc 的浏览器上设置的 1px 的边框，在移动端的浏览器上看上去会“更粗” 一些。这一切跟DPR有关，不同设备的dpr不同，导致1个css像素对应不同的设备像素。
+
+注释：为了解决缩放问题，固定屏幕宽度，通常会设置如下代码。
+```
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum=1.0,user-scalable=no">
+
+```
+user-scalable=no表示禁止用户缩放
+width=device-width代码表示页面宽度设置实际设备宽度，这样1px=1设备像素，initial-scale=1.0,maximum-scale=1.0,minimum=1.0表示css像素缩放的倍数，1.0表示1个css像素 = 1个设备物理像素。
+0.5表示此时0.5个css像素才等于1个物理设备像素。
+
+Ratio屏幕的出现使得屏幕最小长度单位不是设备像素，而是{{ devicePixelRatio }}个，当dpr=2时，表示1个css像素=2个设备像素，为了达到1个css像素=1个设备像素，initial-scale=0.5表示将css像素缩小一半，就可以达到这个目的了。因此需要缩放css像素，如何缩放？引入下面的代码
+
+解决方案：  动态修改scale
+```
+var dpr = window.devicePixelRatio || 1
+var scale = 1 / dpr //缩小的倍数
+var content = 'width=device-width, initial-scale=' + scale + ', minimum-scale=' + scale + ', maximum-scale=' + scale + ', user-scalable=no'
+var viewportEl = document.querySelector(flexible)
+
+if (viewportEl) {
+  viewportEl.setAttribute('content', content)
+} else {
+  viewportEl = document.createElement(flexible)
+  viewportEl.setAttribute('name', 'viewport')
+  viewportEl.setAttribute('content', content)
+  document.head.appendChild(viewportEl)
+}
+```
+
+我们想设置小屏幕的100px和大屏幕的100px占比是不同的，因此配合使用rem布局。
+
+
 ### 隐藏元素的方式
 display:none、visibility:hidden、opacity: 0
 
