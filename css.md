@@ -503,8 +503,7 @@ ppi:每英寸像素，值越大，代表每英寸屏幕能容纳的像素越多 
 
 ```
 user-scalable=no表示禁止用户缩放
-width=device-width代码表示页面宽度设置实际设备宽度，这样1px=1设备像素，initial-scale=1.0,maximum-scale=1.0,minimum=1.0表示css像素缩放的倍数，1.0表示1个css像素 = 1个设备物理像素。
-0.5表示此时0.5个css像素才等于1个物理设备像素。
+width=device-width代码表示页面宽度设置实际设备宽度，这样1px=1设备像素，initial-scale=1.0,maximum-scale=1.0,minimum=1.0表示css像素缩放的倍数，1.0表示1个css像素 = 1个设备物理像素。0.5表示此时0.5个css像素才等于1个物理设备像素。scale的优先级高于width=device-width
 
 Ratio屏幕的出现使得屏幕最小长度单位不是设备像素，而是{{ devicePixelRatio }}个，当dpr=2时，表示1个css像素=2个设备像素，为了达到1个css像素=1个设备像素，initial-scale=0.5表示将css像素缩小一半，就可以达到这个目的了。因此需要缩放css像素，如何缩放？引入下面的代码
 
