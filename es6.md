@@ -79,4 +79,8 @@ map的方法有：set、delete、has、clear 属性为size
 
 <https://juejin.cn/post/6844903955282165773>
 
+### Generator
+
+概念：一个用于动态扩展类属性和类方法的函数
+
 

@@ -1006,3 +1006,173 @@ Vnode:新节点 oldNode：旧节点
 
 2.配置service.js文件，内容为引入axios并创建axios对象（axios.create()），传入配置信息如请求头信息、请求时间、跨域设置。接着调用axios对象的interceptor.request.use()和interceptors.response.use()方法设置请求拦截器（token验证）和请求响应器，最后将这个对象暴露出其
 
+
+### vue项目划分结构和划分组件
+
+原则：
+
+1.  文件夹和内部文件语义一致，即路由模块文件夹应该只包含路由模块
+
+2.  单一出口/入口，如每个模块应该有一个index.js文件作为模块下其他文件统一对外暴露的出口
+
+3.  就近原则，紧耦合文件放在一起并以相对路径引用
+
+4.  公共文件以绝对路径的方式引用
+
+5.  /src以外的文件不该被引入
+
+单页面目录结构：
+project
+│  .browserslistrc
+│  .env.production
+│  .eslintrc.js
+│  .gitignore
+│  babel.config.js
+│  package-lock.json
+│  package.json
+│  README.md
+│  vue.config.js
+│  yarn-error.log
+│  yarn.lock
+│
+├─public
+│      favicon.ico
+│      index.html
+│
+|-- src
+    |-- components
+        |-- input
+            |-- index.js
+            |-- index.module.scss
+    |-- pages
+        |-- seller
+            |-- components
+                |-- input
+                    |-- index.js
+                    |-- index.module.scss
+            |-- reducer.js
+            |-- saga.js
+            |-- index.js
+            |-- index.module.scss
+        |-- buyer
+            |-- index.js
+        |-- index.js
+
+多页面目录结构：
+```
+my-vue-test:.
+│  .browserslistrc
+│  .env.production
+│  .eslintrc.js
+│  .gitignore
+│  babel.config.js
+│  package-lock.json
+│  package.json
+│  README.md
+│  vue.config.js
+│  yarn-error.log
+│  yarn.lock
+│
+├─public
+│      favicon.ico
+│      index.html
+│
+└─src
+    ├─apis //接口文件根据页面或实例模块化
+    │      index.js
+    │      login.js
+    │
+    ├─components //全局公共组件
+    │  └─header
+    │          index.less
+    │          index.vue
+    │
+    ├─config //配置（环境变量配置不同passid等）
+    │      env.js
+    │      index.js
+    │
+    ├─contant //常量
+    │      index.js
+    │
+    ├─images //图片
+    │      logo.png
+    │
+    ├─pages //多页面vue项目，不同的实例
+    │  ├─index //主实例
+    │  │  │  index.js
+    │  │  │  index.vue
+    │  │  │  main.js
+    │  │  │  router.js
+    │  │  │  store.js
+    │  │  │
+    │  │  ├─components //业务组件
+    │  │  └─pages //此实例中的各个路由
+    │  │      ├─amenu
+    │  │      │      index.vue
+    │  │      │
+    │  │      └─bmenu
+    │  │              index.vue
+    │  │
+    │  └─login //另一个实例
+    │          index.js
+    │          index.vue
+    │          main.js
+    │
+    ├─scripts //包含各种常用配置，工具函数
+    │  │  map.js
+    │  │
+    │  └─utils
+    │          helper.js
+    │
+    ├─store //vuex仓库
+    │  │  index.js
+    │  │
+    │  ├─index
+    │  │      actions.js
+    │  │      getters.js
+    │  │      index.js
+    │  │      mutation-types.js
+    │  │      mutations.js
+    │  │      state.js
+    │  │
+    │  └─user
+    │          actions.js
+    │          getters.js
+    │          index.js
+    │          mutation-types.js
+    │          mutations.js
+    │          state.js
+    │
+    └─styles //样式统一配置
+        │  components.less
+        │
+        ├─animation
+        │      index.less
+        │      slide.less
+        │
+        ├─base
+        │      index.less
+        │      style.less
+        │      var.less
+        │      widget.less
+        │
+        └─common
+                index.less
+                reset.less
+                style.less
+                transition.less
+```
+
+### 权限管理以及按钮级别的权限管理实现
+
+接口权限：利用axios请求拦截在给请求头添加上token,然后再axios响应拦截上根据后端返回的状态码决定路由跳转
+
+路由权限：初始化时挂载全部路由，每次路由跳转前利用路由的meta字段做权限判断
+
+菜单权限：
+
+按钮权限：
+
+（1）用v-if判断，即获取用户的权限和路由表的权限，如果存在则显示
+
+（2）通过自定义指令判断，首先路由配置里meta配置了按钮权限角色，然后定义一个全局指令has，在bind钩子里获取路由表里的权限然后跟用户权限比较，如果没通过则通过则删除该el实例
