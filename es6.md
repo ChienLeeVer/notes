@@ -81,6 +81,28 @@ map的方法有：set、delete、has、clear 属性为size
 
 ### Generator
 
-概念：一个用于动态扩展类属性和类方法的函数
+概念：在不改变原有类的属性和方法的情况下，用于动态扩展类属性和类方法的函数
+
+
+用法：
+```
+//类的装饰，函数接受一个类
+function action(target) {
+    target.xx = xx
+}
+
+@action
+class Person {}
+
+//类的属性装饰
+function readOnly(target, name, descriptor) { //target为对象，name为属性名，descriptor为属性配置
+    descriptor.writable = false
+    return descriptor
+}
+class Person {
+    @readOnly
+    name() { } //实现了对Person.name只可读的限制
+}
+```
 
 

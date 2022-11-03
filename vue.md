@@ -1176,3 +1176,63 @@ my-vue-test:.
 （1）用v-if判断，即获取用户的权限和路由表的权限，如果存在则显示
 
 （2）通过自定义指令判断，首先路由配置里meta配置了按钮权限角色，然后定义一个全局指令has，在bind钩子里获取路由表里的权限然后跟用户权限比较，如果没通过则通过则删除该el实例
+
+### vue中跨域
+
+跨域的概念： 浏览器有一个同源策略，在一个网站中规定只有协议、主机、端口相同的称之为同源，非同源请求称之为跨域。浏览器会限制跨域请求。
+
+解决方案：JSONP、CORS、Proxy
+
+CORS: Cross-origin resource sharing跨域资源共享，指的是后端在响应头中将Access-Control-Allow-Origin字段值设置为目标服务器主机，这样在跨域请求时，服务器返回的响应携带这一字段，浏览器识别后才会对其作出处理。
+
+Proxy: 代理，即将请求转到中间服务器，通过中间服务器转发请求到目标服务器，将得到的结果转发到前端。
+
+1.  vue-cli脚手架搭建的项目，在vue.config.js中设置如下代码，这种做法必须设置中间服务器和应用程序在同一个主机上否则仍然会产生跨域
+```
+devServer: {
+    host: '0.0.0.0', //中间服务器主机
+    port: 8080, //端口
+    open: true, //项目启动自动打开网站
+    proxy : {
+        '/api': {
+            target: 'xxx', //目标服务器地址
+            changeOrigin: true, //是否跨域
+            pathRewrite : {
+                '^/api' : 'xx' //将访问/api 改写为 /xx
+            }
+        }
+    }
+}
+```
+2.建议使用nginx代理
+
+### 从本地部署到服务器提示404的原因
+
+1.如何部署： 通过在终端输入将打包文件传输到服务器的静态资源文件夹中，再配合nginx代理即可
+```
+//user为主机登录用户 host为主机外网ip
+scp. dist.zip user@host:xxx/xxx/xxx
+```
+
+2.history模式下出现问题：vue为单页应用，是一种网站的模型，所有用户交互通过动态重写页面来实现。由于nginx代理的配置，在访问www.website.com时，会代理访问服务器下/data/dist/index.html文件，但是vue的路由会自动跳转到www.website.com/login登录页面并执行刷新操作，nginx如果没配置是无法访问的
+
+3.hash模式下没问题：因为hash模式下，hash值为#/login，这些hash内容不包含在请求当中，因此不会重新加载页面
+
+4.解决方案：如果是history模式，只需要将任意文件的访问重定向到index.html即可，将路由交给前端处理。具体做法是在nginx的配置文件中配置```try_files $uir $uri/ /index.html```,同时在vue路由跳转中设置*路由，当访问不存在的路由时显示404组件
+
+### 如何处理vue项目中的错误
+
+1.后端接口错误：通过axios响应拦截器处理后端返回的错误
+
+2.代码逻辑错误：设置全局错误处理函数，
+```
+vue.config.errorHandler = function (err, vm, info) {
+
+}
+```
+vue2.5新增了errorCaptured钩子用于捕获子孙组件的错误
+```
+errorCaptured(err, vm, info) {
+    return boolean //是否将错误继续向上传递给父组件或者全局处理函数
+}
+```
