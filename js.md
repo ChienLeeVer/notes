@@ -1191,3 +1191,66 @@ function flat(arr = [], result = []) {
 
 常见情况：函数内部给未定义的变量赋值（严格模式解决）、定时器（clear）、闭包（设置为null解除引用）、DOM的引用（设置为null）
 
+
+### 浏览器本地存储的方式、区别、应用场景
+
+cookie: 为了识别用户身份而保存在本地的数据，为了解决http协议无状态的问题，特点是4KB，每次发送请求都会携带cookie，因此需要对cookie进行加密，常用属性有exprise/max-age/domain/path/secure，分别表示过期日期，过期剩余秒数，目标主机，请求必须携带path才能携带cookie,是否使用https才能传输。可以直接通过document.cookie = 'key=value'设置。
+
+localStorage(html5新增):本地持久化存储，需手动删除，5M（不同浏览器厂商不同），同域共享，本质是字符串读取。方法有setItem()/getItem()/removeItem()/clear()/key()
+
+sessionStorage:和localStorage差不多一样，但是页面关闭就会自动消失
+
+区别：
+
+存储大小：cookie4KB，sotrage5M或者更大
+
+过期时间：cookie设置的过期时间之前有效，localStorage手动删除前有效，sessionStorage页面关闭前有效
+
+是否发送到服务器：cookie会自动发送到服务器，服务器也可以发送到客户端。localStorage和sessionStorage不会发送到服务器而是本地保存
+
+### 函数式编程
+
+纯函数：相同的输入相同的输出，不能修改全局变量/引用传递的参数
+
+高阶函数：函数作为输入/输出值，只关注结果，存在使用闭包缓存的特性
+
+柯里化：把一个具有多个参数的函数转为一个嵌套的一元函数
+```
+function curry(fn) {
+    return function curriedFn(...args) {
+        if(args.length < fn.length) {//判断实参数是否小于形参数
+            return function() {
+                return curriedFn(...args.concat([...arguments])) //如果小于则传递本次参数并递归
+            }
+        }
+
+        return fn(...args)
+    }
+}
+```
+
+组合和管道：将多个函数组成一个函数,管道从左到右执行，组合从右到左执行，以下为函数代码
+```
+const compose = (...fns)=>val=>fns.reverse().reduce((acc, fn)=>fn(acc), val)
+
+const pipe = (...fns)=>val=>fns.reduce((acc, fn)=>fn(acc), val)
+```
+
+### 如何实现函数缓存
+
+函数缓存：将函数的结果缓存，本质是用空间换时间
+
+实现方式：闭包+函数柯里化+高阶函数
+```
+const memorize = function (func, content) {
+    const cache = Object.create(null)
+    const content = content || this
+    return (...keys) => {
+        if(!cache[key]) {
+            cache[key] = func.apply(content, key) //保存执行结果
+        }
+        return cache[key]
+    }
+}
+```
+
