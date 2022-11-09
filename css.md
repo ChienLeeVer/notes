@@ -598,3 +598,35 @@ display:none、visibility:hidden、opacity: 0
 （4）flex布局
 
 （5）grid布局
+
+### grid布局
+
+概念：即网格布局，属于二维布局，用纵横交互的两组网格线将容器划分为行和列。
+
+```
+.container {
+    display: grid; //inline-grid为对外行内元素，对内为网格布局
+
+    grid-template-columns: 200px 200px 200px;//设置列数，如果重复用函数repeat(个数，大小)；fr表示将剩余空间划分几等份；auto-fill尽可能的填充；auto浏览器决定
+    grid-template-rows: 200px 200px 200px;//同上
+
+    grid-gap:;//每个单元格之间的间隔，grid-columns-gap和grid-rows-gap的简写
+    grid-template-areas: 'A A A'
+                         'B B B'
+                         'C C C'; //将容器分为ABC三个区域
+
+    grid-auto-flow: column/row ; //决定元素排列方式是先行后列还是先列后行
+    justify-items: start/end/center/stretch; //决定所有单元格的内容在单元格中的水平排列方式
+    align-items: start/end/center/stretch; //决定所有单元格的内容在单元格中的垂直排列方式
+
+    justify-content: start/end/center/space-around/space-evenly/space-between; //决定grid容器在父容器中的水平位置
+    align-content: start/end/center/space-around/space-evenly/space-between; //决定grid容器在父容器中的垂直位置
+
+}
+
+.item {
+    grid-area: 'A'; //指定该单元格属于自定义的A区域
+    justify-self: start/end/center/stretch; //单独决定该元素在单元格中的水平位置
+    align-self:; start/end/center/stretch; //单独决定该元素在单元格中的垂直位置
+}
+```

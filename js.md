@@ -1254,3 +1254,100 @@ const memorize = function (func, content) {
 }
 ```
 
+### 精度丢失问题
+
+### 防抖和节流
+
+概念：本质上是优化高频率执行代码的手段。对于resieze、scroll、mousemove、keypress频繁触发回调函数函数的事件，会极大的浪费性能，防抖和截流能够限制回调函数的执行次数，提高性能，节流：在n秒内，重重触发事件只会执行一次回调函数。防抖：在n秒后执行回调函数，n秒重复触发事件只会重新计时。
+
+```
+function throttle (fn, delay) {
+    let oldTime = new Date()
+    return function(...args) {
+        let context = this
+        let newTime = new Date()
+        if(newTime - oldTime >= delay) {
+            fn.apply(this, args)
+            oldTime = new Date();
+        }
+
+    }
+}
+
+function throttle2 (fn, delay) {
+    let timer = null
+    return function(...args) {
+        if(!timer) {
+            let context = this
+            timer = setTimeout(function() {
+                fn.apply(context, args)。
+                timer = null
+            }, delay)
+        }
+    }
+}
+```
+```
+function debounce (fn, delay). {
+    let timer
+    return function(...args) {
+        clearTimeout(timer)
+        let context = this
+        timer = setTimeout(function() {
+            fn.apply(context, args)
+        }, delay)
+    }
+}
+```
+
+应用场景：
+
+防抖：搜索框输入、手机号验证、resize
+
+节流：滚动加载
+
+### 如何判断一个元素是否在可视区域中
+
+
+方法1: offsetTop（元素上边框距离外边框的距离）<= scrollTop(滚动条滚动的距离) + 可视窗口的高。即当视窗的高度加上滚动条的高度大于元素在页面中的高度位置时表明元素可视
+
+注意：clientWidth = content + padding, offsetWidth = content + padding + border
+
+```
+function isInViewPort (el) {
+    const viewport = window.innerHeight || document.documnetElment.clientHeight || document.body.clientHeight
+    const offsetTop = el.offsetTop
+    const scrollTop = document.documentElement.scrollTop
+    const top = offsetTop - scrollTop
+    return top <= viewport
+}
+```
+
+方法2: 利用el.getBoudingClientRect()，这是一个对象，left、top、right、bottom分别表示元素左边框到可视区域左边的距离、元素上边框到可视区域上边的距离、元素右边框到可视区域左边的距离、元素下边框到可视区域左边的距离，当left、top大于0，right、bottom小于可视区域时表示元素在可视窗口内
+```
+function isInViewPort (element) {
+    const viewWidth = window.innerWidh || document.documentElement.clientWidth || documeent.body.clientWidth
+    const viewHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    cosnt { left, right, top, bottom } = element.getBoundingCLientRect()
+
+    return ( left >= 0 && right >= 0 && right <= viewWidth && bottom <= viewHeight )
+}
+```
+
+方法3: 通过IntersectionObserve,即观察者模式
+```
+const observer = new IntersectionObserver( function(entries, observer) {
+    //回调函数
+    entries.forEach((entry)=>{
+        //entry.target为被观察者即dom元素
+    })
+}, {
+    //配置项，设置触发时间点
+    threshold: 1.0, //表示重叠面积占被观察者的比例，从 0 - 1 取值，
+    root: parentDom //目标元素的父级元素dom
+})
+
+//注册一个观察者
+observer.observer(el)
+
+```
