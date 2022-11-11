@@ -630,3 +630,40 @@ display:none、visibility:hidden、opacity: 0
     align-self:; start/end/center/stretch; //单独决定该元素在单元格中的垂直位置
 }
 ```
+
+### css3新特性
+
+1.边框：border-radius、border-shadow、border-image
+
+2.背景：background-clip、background-origin、background-size、background-break
+
+3.文字：word-wrap、text-overflow、text-shadow、text-decoration
+
+4.过渡：transition:property duration timing-funtion delay
+
+> transition-property不支持display:none 到display: block的转变
+
+5.transform转换：translate scale rorate skew
+
+> transform不支持行内元素，必须转为block
+
+6.animation: name duration timing-function delay...
+
+7.lineer-gradient、radial-gradient
+
+
+### 回流和重绘
+
+1.概念：回流即布局引擎确定元素在页面中的大小和位置的过程。而重绘是确定元素大小和位置后根据元素的特性绘制出来的过程。
+
+2.触发时机：
+
+    1.回流：增删dom元素、修改元素的大小、修改元素的内容、修改元素的位置、获取实时数值（offset、client、scroll一类值、getComputedStyle）
+
+    2.重绘：回流一定会触发重绘。不触发回流只触发重绘有color、text-shadow等属性
+
+3.优化:
+
+    1.浏览器优化机制：浏览器将修改操作放置在队列里，过段时间/达到阀值时执行操作清空队列。而获取实时数值会强制清空队列
+
+    2.避免回流：不使用table布局、动画元素脱离文档流、避免使用css表达式、尽量使用transform/opacity/filters这些不会触发重绘回流的动画、节点一次性插入、离线操作（设置为display:none后再用js设置样式）
