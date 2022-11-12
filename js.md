@@ -1351,3 +1351,6 @@ const observer = new IntersectionObserver( function(entries, observer) {
 observer.observer(el)
 
 ```
+
+### 大文件如何断点续传
+

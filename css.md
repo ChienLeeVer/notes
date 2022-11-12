@@ -666,4 +666,73 @@ display:none、visibility:hidden、opacity: 0
 
     1.浏览器优化机制：浏览器将修改操作放置在队列里，过段时间/达到阀值时执行操作清空队列。而获取实时数值会强制清空队列
 
-    2.避免回流：不使用table布局、动画元素脱离文档流、避免使用css表达式、尽量使用transform/opacity/filters这些不会触发重绘回流的动画、节点一次性插入、离线操作（设置为display:none后再用js设置样式）
+    2.避免回流：不使用table布局、动画元素脱离文档流、避免使用css表达式、尽量使用transform/opacity这些不会触发重绘回流的动画、节点一次性插入、离线操作（设置为display:none后再用js设置样式）
+
+### 响应式布局
+
+1.概念：响应式设计指页面的设计与开发根据用户的行为和不同的设备环境作出相应的响应和调整。
+
+2.实现：本质通过媒体查询检测出不同的设备屏幕尺寸做处理。为了处理移动端需要
+```
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+```
+    1.媒体查询：@media (max-width: 320px)或者 @media screen and (max-width: 320px),区别前者会打印media样式
+
+    2.百分比：元素的宽度和高度依赖于父级元素，但是缺点在于元素的padding和margin百分比依赖于父级元素的width,border-radius依赖于自身宽度，因此不推荐。
+
+    3.vw/vh
+
+    4.rem布局：这种方式1rem = html { font-size: 12px; },通常会搭配媒体查询设置不同的屏幕宽度下设置不同个根font-size，如果需要监听手机旋转或者页面缩放，则在加载css之前插入script,监听对应事件，设置font-size
+
+    5.框架的栅栏布局
+
+### css性能优化
+
+1.内联首屏关键css：由于外部引入css文件的方式会影响屏幕的渲染速度，通过在内敛样式添加首屏内容的关键css减少渲染时间来提升用户体验
+
+2.异步加载css: 通过js将css文件插入到head标签的末尾或者通过link标签的meta=noexist设置为异步加载
+
+3.通过webpak压缩代码
+
+4.合理使用选择器：三层嵌套以内，id选择器不嵌套，不使用通配符和属性选择器
+
+5.不要使用@import：import会影响浏览器的并行下载，使得页面的加载更耗时。而且import还可能导致加载顺序错误，先加载引入文件再加载被引入文件
+
+6.其他：雪碧图、base64、transform代替动画
+
+### 单行文本和多行文本溢出省略
+
+```
+/* 单行文本 */
+p {
+    text-overflow: ellipsis; /* 溢出部分用省略号代替 */
+    white-space: nowrap: /* 溢出不换行 */
+    overflow: hidden: /* 超出部分隐藏 */
+}
+
+/* 多行文本：高度截断，元素设置相对定位和溢出隐藏，伪元素内容为省略号并设置绝对定位到右下角 */
+.demo {
+    position: relative;
+    line-height: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.demo::after {
+    content: '...';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+
+/* 多行文本：行数截断 */
+.demo {
+    -webkit-line-clamp: 2; /* 截断行数 */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+```
