@@ -736,3 +736,40 @@ p {
     text-overflow: ellipsis;
 }
 ```
+
+### 如何完成视差滚动效果
+
+1. background-attachment: fixed; //将背景图片设置为不随页面的部分滚动而滚动
+
+2. 父元素设置：perspective和transform-style:perserve-3d ,子元素设置transform: translateZ()
+
+### 如何实现一个三角形
+
+宽高设置为0，边框设置宽度，边框颜色设置仅有一个颜色显示。如果需要显示直角三角形则需要控制边框的宽度
+```
+div {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 20px 20px;
+    border-color: transparent transparent #96ceb4;
+}
+
+div::after {
+    content: '';
+    border-style: solid;
+    border-width: 0 40px 40px;
+    border-color: transparent transparent #96ceb4;
+    position: absolute;
+    top: 6px;
+    left: -40px;
+}
+```
+
+### 如何让chrome支持小于12px的字体
+
+1. zoom: 50%; 表示让元素变焦，尺寸缩小到原来的50%，缺点是非标准属性，会触发重排
+
+2. -webkit-transform: scale(); 不会触发重排，需要注意是只能用可以定义宽高的元素上，行内元素需inline-block
+
+3. -webkit-text-size-adjust: none; 表示字体大小不随设备变化，缺点是不支持中文并且有版本要求

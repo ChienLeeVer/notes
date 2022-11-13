@@ -1093,3 +1093,30 @@ JS逻辑：当聚焦时，设置一个定时器，控制每个label添加active�
 </body>
 </html>
 ```
+
+### 倒计时实现
+//整体思路：如果传进来的是一个倒计时的时间戳则转为剩余日期，如果参数是某个日期则先获得时间差的时间戳
+//将时间戳处理转为倒计时
+function seconds (seconds) {
+    return {
+        day: Math.floor(seconds/(24 * 3600)),
+        hours: Math.floor((seconds % (24 * 3600)) / 3600),
+        minutes: Math.floor( (seconds % (24 * 3600)) % 3600 / 60 ),
+        second: Math.floor( ( (seconds % (24 * 3600)) % 3600 ) % 60 )
+    }
+}
+
+//利用定时器实现不断渲染，当倒计时小于0时清除定时器，否则一直更新视图
+function render (date) {
+    function render (date) {
+        let timer = setInterval(function() {
+            let time = new Date(date).getTime() -  new Date().getTime()
+            if(time > 0) {
+                let obj = getTime(time / 1000)
+                document.querySelector('div').innerHTML = `${obj.day}天${obj.hours}小时${obj.minutes}分${obj.second}秒`
+            } else {
+                clearInterval(timer)
+            }
+        }, 1000)
+    }
+}
