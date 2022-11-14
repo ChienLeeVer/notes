@@ -1277,10 +1277,11 @@ function throttle (fn, delay) {
 function throttle2 (fn, delay) {
     let timer = null
     return function(...args) {
-        if(!timer) {
+        if(!timer) { //不存在时才设置定时器，即只设置一次
             let context = this
             timer = setTimeout(function() {
-                fn.apply(context, args)。
+                fn.apply(context, args)
+                clearTimeout(timer)
                 timer = null
             }, delay)
         }
@@ -1291,7 +1292,7 @@ function throttle2 (fn, delay) {
 function debounce (fn, delay). {
     let timer
     return function(...args) {
-        clearTimeout(timer)
+        clearTimeout(timer) //直接清除，然后重新设置定时器
         let context = this
         timer = setTimeout(function() {
             fn.apply(context, args)
