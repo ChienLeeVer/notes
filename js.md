@@ -1354,3 +1354,29 @@ observer.observer(el)
 
 ### 大文件如何断点续传
 
+
+### 上拉加载/下拉刷新
+
+1.  上拉加载：判断滚轮滚动的距离+视窗高度 >= 页面高度
+
+```
+let scrollTop = document.documentElement.scrollTop //滚动距离
+let windowHeight = window.innerHeight || document.documentElement.clientHeight //视窗高度
+let pageHeight = document.body.scrollHeight //页面高度,scrollHeight包含溢出内容
+
+if (scrollTop + windowHeight >= pageHeight) {
+    //执行加载
+}
+```
+
+2. 下拉刷新：
+
+监听三个事件，touchstart、touchmove、touchend，touchstart事件记录初始触摸点位置信息1，touchend记录当前触摸点位置信息2，当位置信息2-位置信息1 > 0 并且位置信息2-位置信息1和位置信息1均小于规定值时，页面继续滚动，当差值接近规定值时提示松手下拉刷新，touchend触发回调，页面滚动到0px处。
+
+### 单点登录
+
+1.  同域名的单点登录：将cookie的domain设置为父域名，path设置为根路径，并将token保存在父域当中，这样所有子域都可以访问到父域的token
+
+2. 不同域名的单点登录：需要利用认证中心，大致思路是用户在认证中心登录，将生成的token写入认证中心的cookie中。当用户对应用系统发起请求时，会判断是否携带token,如果没有则携带cookie并跳转到认证中心，认证中心会根据cookie判断用户是否已经登录，如果登陆了则生成token写在cookie中传回应用系统，如果没有则跳转到登陆页面。当应用系统得到token之后还会在认证中心验证token,如果通过则给本次访问放行。
+
+另一种方式是前端拿到后端生成的token保存在localStorage中，并利用iframe和postMessage将token写入到跨域的localStorage中

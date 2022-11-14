@@ -773,3 +773,18 @@ div::after {
 2. -webkit-transform: scale(); 不会触发重排，需要注意是只能用可以定义宽高的元素上，行内元素需inline-block
 
 3. -webkit-text-size-adjust: none; 表示字体大小不随设备变化，缺点是不支持中文并且有版本要求
+
+### css预处理
+1.  概念：css预处理本质是css的超集，是为了解决css代码复用、更易于维护及扩展而产生的。目前主流的css预处理器有sass、less、stylus。
+
+2.  区别：
+
+    1.  基本使用：sass和stylus没有花括号和分号，less有
+
+    2.  变量：sass和stylus用$开头，less用@开头，stylus用=赋值，sass用：赋值
+
+    3.  作用域：sass没有全局作用域，less和stylus和js一样
+
+    4.  混入：sass用@mixin 名(参数：默认值){}定义和@include 名引入，less和定义一个类样式方式一样，stylus和定义一个js函数方式一样
+
+    5.  模块化：@import 地址
