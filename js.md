@@ -925,14 +925,14 @@ function deepClone(obj, hash = new WeakMap() ) {
 寄生组合继承：最优继承，所有继承的组合,类似extends
 ```
 function clone(parent, child) {
-    child.prototype = Object.create(parent.prototype)
-    child.prototype.constructor = child
+    child.prototype = Object.create(parent.prototype) //基于父类原型对象上的属性和方法创建一个新对象并赋值给子类的原型
+    child.prototype.constructor = child //将子类原型构造器指向自身
 }
 
 function Parent() {}
 
 function Child() {
-    Parent.call(this)
+    Parent.call(this) //调用父类函数，继承父类的自身属性和方法。÷ 
 }
 
 clone(Parent, Child)
