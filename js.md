@@ -932,7 +932,7 @@ function clone(parent, child) {
 function Parent() {}
 
 function Child() {
-    Parent.call(this) //调用父类函数，继承父类的自身属性和方法。÷ 
+    Parent.call(this) //调用父类函数，继承父类的自身属性和方法。÷
 }
 
 clone(Parent, Child)
@@ -941,7 +941,7 @@ clone(Parent, Child)
 
 ### this
 
-概念：this指向函数被调用时所处的执行上下文(运行时绑定)，而箭头函数没有this,this为定义该函数时所在的作用域指向的对象，而不是使用时所在的作用域指向的对象（编译时确定）
+概念：this指向函数被调用的对象，有两个条件，一是this指向一个对象，二是这个对象是调用函数的对象，而箭头函数没有this,this为定义该函数时所在的作用域指向的对象，而不是使用时所在的作用域指向的对象（编译时确定）
 
 绑定方法：默认绑定（全局定义的函数）、隐式绑定（全局定义的函数赋值给对象）、new绑定、显式绑定
 
