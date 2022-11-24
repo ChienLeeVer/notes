@@ -879,15 +879,15 @@ this.$bux.$emit('xx')
 
 ### 缓存组件/keep-alive
 
-概念：keep-alive用于包裹动态组件，当动态组件的:is属性发生变化时，keep-alive能够缓存那些不活动的组件实例，而不是销毁它，避免了重复渲染。
+概念：keep-alive用于缓存一个不活动的组件实例，通常用在动态组件/router-view当中，由于缓存了组建实例，避免了重复渲染。
 
-用法：keep-alive有include属性，exclude属性，分别表示匹配的组件名称和不匹配的组件名称，值可以是字符串/字符串数组/正则，但是数组和正则需要v-bind绑定。max-age表示能够缓存的组件最大数量。
+用法：keep-alive有include属性，exclude属性，分别表示匹配的组件名称和不匹配的组件名称，值可以是字符串/字符串数组/正则，但是数组和正则需要v-bind绑定。max-age表示能够缓存的组件最大数量。通常在router的路由配置中为一个路由设置meta属性，根据meta属性里的某些值和v-if搭配使用决定一个组件出现，从而决定是否缓存
 
-应用场景：在父组件访问子组件之后，用户又需要主动回到父组件的情况
+应用场景：组件切换/视图返回
 
-获得缓存数据：使用组件路由守卫beforeRouteEnter，在参数next的回调函数中传递vm.getData()。或者在actived钩子中使用this.getData()也能获取数据。
+缓存后获得数据/更新组件的途径：在路由守卫beforeRouteEnter的next的回调函数中或者在actived钩子中获取数据。
 
-注意：使用缓存后，新增了actived和deactivated钩子。并且除了这两个钩子外，重新访问缓存组件不会再次调用组件的生命周期钩子。
+注意：使用缓存后，新增了actived和deactivated钩子。并且除了这两个钩子外，重新访问缓存组件不会再次调用组件的生命周期钩子，而是用actived钩子。
 
 ### vue中的修饰符
 

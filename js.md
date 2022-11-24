@@ -1053,21 +1053,30 @@ function ajax(option) {
 
 ```
 //实现一个bind
-Function.prototype.bind = function(context) {
-    if(typeof this !== 'function') return new TypeError('Error')
-
-    const args = [...arguments].slice(1)
-    const fn = this
-
-    return function Fn(){
-        return fn.apply(this instanceof Fn ? new fn(...arguments) : context, args)
+Function.prototype.bind = function() {
+    var args = arguments;
+    // 获取到新的上下文
+    var context = args[0];
+    // 保存当前的函数
+    var func = this;
+    // 获取其他的参数
+    var thisArgs = Array.prototype.slice.call(args, 1);
+    var returnFunc = function() {
+        // 将两次获取到的参数合并
+        Array.prototype.push.apply(thisArgs, arguments)
+        // 使用apply改变上下文
+        // return func.apply(context, thisArgs);
+        // 最关键的一步，this是new returnFunc中创建的那个新对象，此时将其传给func函数，其实相当于做了new操作最后一步（执行构造函数）
+        return func.apply(this instanceof returnFunc ? this : context, thisArgs);
     }
+    return returnFunc;
 }
+
 ```
 
 ### 事件循环
 
-概念：JS为单线程，同一时间只能做一件事。JS里的任务分为同步任务和异步任务，异步任务又分为微任务和宏任务，JS会按代码顺序执行，遇到同步任务立刻执行，遇到异步任务则加入异步队列中，等待同步任务执行完毕，检查异步队列，先执行微任务，每执行完一个微任务都会检查是否有同步任务加入，所有微任务执行完之后执行宏任务，每个宏任务执行完之后会检查是否有同步任务和微任务加入。
+概念：JS为单线程，同一时间只能做一件事。为了防止阻塞而出现的事件循环，JS里的任务分为同步任务和异步任务，异步任务又分为微任务和宏任务，JS会按代码顺序执行，遇到同步任务立刻加入主线程中并执行，遇到异步任务则加入异步队列中，等待同步任务执行完毕，检查异步队列，先执行微任务，每执行完一个微任务都会检查是否有同步任务加入，所有微任务执行完之后执行宏任务，每个宏任务执行完之后会检查是否有同步任务和微任务加入。
 
 分类：
 
@@ -1076,7 +1085,7 @@ Function.prototype.bind = function(context) {
 
 async/await:
 
-    async用于声明一个异步方法，返回一个promise对象，而await用于等待异步方法执行，如果await跟着promise对象，则返回该对象的结果，如果是其它值则返回其它值，await会阻塞后面的代码，会将后面的代码加入异步队列中，当await等待的方法执行完之后，await后面的代码不会立刻执行，而是检查外部是否有同步任务，等待同步任务执行完之后才执行。
+    async用于声明一个异步方法，返回一个promise对象，而await用于等待异步方法执行，如果await跟着promise对象，则返回该对象的结果，如果是其它值则返回其它值，await会阻塞后面的代码，**会将后面的代码(无论是同步代码还是异步代码)加入微任务队列中**，当await等待的方法执行完之后，await后面的代码不会立刻执行，而是检查外部是否有同步任务，等待同步任务执行完之后才执行。
 
 
 ### BOM

@@ -387,7 +387,7 @@ display:-webkit-box;
 ```margin-left: -200px;```
 ![](/cssImage/%E5%9C%A3%E6%9D%AF3.png)
 
-（3）如果margin-left值设置为负百分比，此时是相对于父容器而言，根据这个值算出是否浮动到上一行。如果算出的值是超过自身浮动元素的宽度则拉到上一行。此时需要注意的是，第二行的浮动元素被拉到第一行后margin-left的起始位置是相对于原本第一行浮动元素的最右边。
+（3）如果margin-left值设置为负百分比，此时是相对于父容器而言，根据这个值算出是否浮动到上一行。如果算出的值是超过自身浮动元素的宽度则拉到上一行。此时需要注意的是，第二行的浮动元素被拉到第一行后margin-left的起始位置是相对于原本第一行浮动元素的最右边。也就是说先拉到第一行再向左浮动100%，由于此时父容器的宽度是绿色区域决定的，
 
 ``` margin-left: -100%;```
 
@@ -532,7 +532,7 @@ display:none、visibility:hidden、opacity: 0
 
 其它：height,width=0 或者position:absolute
 
-区别：display会不存在页面中，会触发重排，重绘，而opacity和visibility不会触发重排，opacity还能触发自身绑定事件
+区别：display会不存在页面中，会触发重排，重绘，而opacity和visibility不会触发重排，opacity还能触发自身绑定事件，在动画中默认使用GPU加速不会触发重绘，子元素不会隐藏
 
 ### 元素垂直居中的方式
 
