@@ -90,7 +90,7 @@ new Vue({
 <template>
     <div id="app">
         <p>
-            <router-link to="/">Go to Home</router-link> //自动转化为a标签，属性to转化为href
+            <router-link to="/">Go to Home</router-link> //自动转化为a标签，属性to转化为href,如果想让router-link转为指定类型标签，如li标签，需要添加属性tag="li"
             <router-link to="/about">Go to About</router-link>
         </p>
         <router-view></router-view> //显示对应链接的模板内容
