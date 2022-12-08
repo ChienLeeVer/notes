@@ -788,3 +788,31 @@ div::after {
     4.  混入：sass用@mixin 名(参数：默认值){}定义和@include 名引入，less和定义一个类样式方式一样，stylus和定义一个js函数方式一样
 
     5.  模块化：@import 地址
+
+
+### 优雅降级和渐进增强
+
+渐进增强：一开始就针对低版本浏览器进行页面构建，完成基本功能，再针对高版本浏览器对效果、互动等进行追加.
+```
+div {
+    -webkit-border-radius: 1px solid red;
+    -moz-border-radius: 1px solid red;
+    -ms-border-radius: 1px solid red;
+    -o-border-radius: 1px solid red;
+    border-radius: 1px solid red;
+    /* 这样的写法效果是，当高版本浏览器支持border-radius时，将会覆盖之前的样式 */
+}
+```
+
+优雅降级：一开始就构建网站的完整功能，然后再对低版本浏览器兼容。
+
+```
+div {
+    border-radius: 1px solid red;
+    -webkit-border-radius: 1px solid red;
+    -moz-border-radius: 1px solid red;
+    -ms-border-radius: 1px solid red;
+    -o-border-radius: 1px solid red;
+}
+```
+因此工作中使用渐进增强的写法较好。
