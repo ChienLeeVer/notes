@@ -15,7 +15,9 @@ vue为MVVM架构，使用虚拟DOM渲染，组件化。通过new vue({ el:'', da
 2. v-on:事件名称：可以为对应的标签添加事件如```<a href="#" v-on:click="vue实例中的方法名">``` 等价于```<a href="#" @click="vue实例中methods的方法名">```。除了click还有其它事件
 
 3. 事件修饰符：.事件修饰符，如.prevent阻止浏览器默认行为，.stop阻止冒泡行为，.capture父元素先捕获, .self事件仅作用于自身时发生冒泡传递到自身时不触发事件，可以连用如.prevert.stop,如```<a href="#" @click.stop.prevent="vue实例中methods的方法名">```;
-(1)number:自动调用parseFloat(输入值),如果无法解析则返回原始值
+(1)number:自动调用parseFloat(输入值),如果无法解析则返回原始值.
+>> .sync修饰符是对组件属性的双向绑定的优化。过去父组件通过子组件的属性传递数据，并绑定一个事件，然后子组件通过$emit触发事件名称，并传递数据。如今只需要在属性上添加prop-name.sync=“xxx”，在子组件中this.$emit('update:prop-name',xx)即可，无需在组件中再另外绑定事件
+
 
 4. v-cloak:通常与{{ }}表达式一起使用，{{ xx }}是事先用占位符，等待xx数据加载，当加载完毕后替换这个占位符，因此在等在加载的时间内，该处显示空白，为标签添加v-cloak后将可以通过添加样式[v-cloak] {xxx}来控制等待数据加载的时间里的样式
 
