@@ -487,11 +487,11 @@ Vue.component('componentDefine',{
 
 （3）离开阶段：v-leave在元素离开前触发生效，下一帧移除效果，v-leave-active在元素离开期间生效，离开后移除效果，v-leave-to在元素离开后触发生效，一帧后移除。一般v-enter-to和v-leave用的少。
 
-（4）如果transition标签的name属性设置为xx,那么在设置style时，就可以设置为xx-enter、xx-leave；
+（4）样式名称：如果transition标签的name属性设置为xx,那么在设置style时，就可以设置为xx-enter、xx-leave；
 
-（5）如果过渡中style同时存在transition和amination,并且想在某个事件内完成，可以```<transition :duration="1000"></transition>```表示总时间为1秒，或者```<transition :duration="{ enter: 500, leave: 800}"></transition>```;
+（5）同步过渡和动画的时间：如果过渡中style同时存在transition和amination,并且想在某个事件内完成，可以```<transition :duration="1000"></transition>```表示总时间为1秒，或者```<transition :duration="{ enter: 500, leave: 800}"></transition>```;
 
-（6）如果想在js中控制样式,则可以
+（6）过渡钩子：如果想在js中控制样式,则可以
 
 ```
 <transition @enter="enter" @leave="leave"></transiiton>
@@ -503,7 +503,7 @@ methods : {
 }
 ```
 
-（7）如果需要控制不同元素之间的过渡效果先后顺序，则可以通过修改mode属性来实现，in-out表示新元素先过渡进入，旧元素后过渡离开。out-in表示旧元素先过渡离开，新元素后过渡进入。
+（7）过渡模式：如果需要控制不同元素之间的过渡效果先后顺序，则可以通过修改transition标签中的mode属性来实现，in-out表示新元素先过渡进入，旧元素后过渡离开。out-in表示旧元素先过渡离开，新元素后过渡进入。
 
 ```
 <transition naem="xxx" mode="in-out">
@@ -536,7 +536,7 @@ methods : {
 </transition>
 ```
 
-（9）使用animate.css动画库，设置刷新页面时，第一次也有动画
+（9）单个元素初始渲染时的过渡，这里使用animate.css动画库
 ```
 <transition name="fade" mode=""
     appear
@@ -547,6 +547,9 @@ methods : {
 </transition>
 //apear表示初始渲染过度，必须设置appear属性，然后再设置appear-active-class、appear-to-class、appear-class等。
 ```
+
+（10）列表过渡：指多个元素使用过渡效果，使用transition-group标签，这里trnasiiton-group标签默认转化为span标签，可以通过transitoin-group标签tag属性来指定转化的标签，在transition-group内部的标签都需要一个唯一key,所有过渡效果类直接作用于内部标签，并且过渡模式（mode）不可用
+
 
 ## 可复用性和组合
 ### 混入
@@ -652,6 +655,19 @@ this.$on([handleName1, handleName2], handleFn1) //不同的事件绑定同一个
 
 ### Vue.observable
 Vue.observable()接收一个对象，对象为数据，如const state = Vue.observable({ msg : '123' }),接着可以通过state.msg获取数据，并且这个state.msg数据是响应式的。Vue.observable类似Vuex的低配版
+
+
+### 深入响应式原理
+
+1. Vue不能检测data对象中数据为对象的数据项删除新增，这意味着在vue实例化后，直接通过vm.xx = xxx;的方式新增的数据不是响应式。
+
+        解决方法：（1）Vue.set(object, key, value)适用于添加单个数据项。
+        （2）this.xx = Object.assign({}, this.xx, {a, b, c, ....})利用Object.assign直接覆盖，适用于一次性添加多个属性。
+
+2. Vue不能检测数组的两种变动，一种是直接通过数组索引修改数组的数据项，如vm.array[indenx] = xxx,另一种是直接修改数组长度，如vm.array.length = xx。这两种方法修改的数据都不是响应式的。
+
+        解决方法：Vue.set/vm.array.slice可以解决第一种问题，vm.array.splice(newLength)可以解决第二种问题
+
 
 ---
 ## 面试系列
