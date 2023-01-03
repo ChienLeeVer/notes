@@ -9,6 +9,7 @@
 初始化vue项目：vue create vue-router-learn
 安装依赖：sudo npm install --save-dev vue@2 vue-router@3
 
+
 1.  在component文件夹下写好需要显示的页面组件内容
 home.vue
 
