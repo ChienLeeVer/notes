@@ -13,6 +13,12 @@
             (3)```vertical-align:middle;``` ：只适用于行内元素、行内块元素、表格里的单元格
 2.
 
+
+### 包含块
+1. 元素的尺寸和位置是收到包含块的影响的，如width:10%,百分比相对于包含块而言，一般情况下元素的包含块为其父元素，但有两种特殊情况：
+   1.   position为absolute:包含块为里它最近的position值不是staitic,即值为fixed/absolute/relateive/sticky的祖先元素（必须为块盒）的内边距区的边缘组成。
+   2.   postion为absolute/fixed: 则满足transform/perspective/filter不为none,will-change为transform/perspective,contain值为paint的最近祖先块元素时为包含块。
+
 ### background-image 代替 img
 > 当图片为超大宽度的banner图时，图片会溢出页面宽度，导致出现滚动条。而用background-image的好处是，利用**```background-position:center center;```**可以保证banner图始终位于中间，并且图片随着页面宽度缩小而溢出的部分会被忽略不显示而图片的主要内容始终在中间。如下图
 <img src="http://img.smyhvae.com/20170813_1119.gif">
