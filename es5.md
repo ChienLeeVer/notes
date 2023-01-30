@@ -94,3 +94,26 @@
     1.  ～～： 可以实现取整
     2.  互换两个变量的值的三种方法：a= a+b; b=a-b; a = a-b; 以及a^=b;b^=a;a^=b;还有解构赋值一一对应取值。不过第一个存在溢出风险。
     3.  开关作用：分别设置变量A、B、C、D、flags为1（0001）、2(0010)、4(0100)、8(1000)、5(0101)，现在需要检测开关C是否打开，则可if( flags & C )即可得到（0100）为true。
+
+
+5. 标准库
+   1. Object
+      1. 判断一个某个值是否是对象 typeof / instanceof / xx === Object(xx)返回true
+      2. 判断一个对象的可遍历属性个数：Object.keys(obj).length 该方法不包括继承属性
+      3. 判断一个对象的属性个数（包含不可遍历属性）：Object.getOwnPropertyNames().length
+      4. 判断一个变量的数据类型：Object.prototype.toString.call(xx).match(/\[object (.*?)\]/)[1].toLowerCase()
+      5. 拷贝一个对象的属性： function copyProperties(to, from) { for (var property in from) { if(!from.hasOwnProperty(property)) continue; Object.defineProperty(to, property, Object.getOwnPropertyDescriptor(from, property));}}
+      6. 如何为使用Object.freeze(obj)的对象添加属性： 通过原型对象，除非原型对象也冻住
+   2. Array
+      1. 判断一个值是否是数组： Array.isArray(arr) / instanceof
+      2. 浅拷贝方法：arr.concat(),slice()
+      3. 改变原数组的方法：pop(),push(),shift(),unshift(),reverse(),splice(start,count,newelement...),sort()
+      4. 不改变原数组的方法：slice(),concat(),map()返回新数组,filter(),forEach()无法返回值
+      5. 将类数组转为真数组：Array.prototype.slice.call(arrLike) / [...arr]
+      6. 判断一个值是否在数组中： arr.indexOf(xx) >= 0 ,该方法无法确认NaN
+   3. Number
+      1. 进制转换： (十进制数字).toString(2/8/16); 将十进制转为2进制。将其它进制转为10进制:parseInt()
+   4. String
+      1. 查找某个字串在字符串中出现的位置：String.prototype.indexOf(str, [起始位置])
+      2. slice、substring以及substr的区别：都是截取一段字符串，区别参数不同，substring起始位置小于结束位置时自动调换，如参数小于0则返回空串，而slice不能调换位置，且参数小于0默认为倒数位置，substr的第二个参数为截取字符个数而非结束位置
+      3. match和search的区别：match返回数组，search返回匹配的第一个位置
