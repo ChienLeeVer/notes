@@ -108,7 +108,7 @@
       1. 判断一个值是否是数组： Array.isArray(arr) / instanceof
       2. 浅拷贝方法：arr.concat(),slice()
       3. 改变原数组的方法：pop(),push(),shift(),unshift(),reverse(),splice(start,count,newelement...),sort()
-      4. 不改变原数组的方法：slice(),concat(),map()返回新数组,filter(),forEach()无法返回值
+      4. 不改变原数组的方法：slice(),concat(),map()返回新数组,filter(),forEach()无法返回值且跳过空元素
       5. 将类数组转为真数组：Array.prototype.slice.call(arrLike) / [...arr]
       6. 判断一个值是否在数组中： arr.indexOf(xx) >= 0 ,该方法无法确认NaN
    3. Number
@@ -117,3 +117,21 @@
       1. 查找某个字串在字符串中出现的位置：String.prototype.indexOf(str, [起始位置])
       2. slice、substring以及substr的区别：都是截取一段字符串，区别参数不同，substring起始位置小于结束位置时自动调换，如参数小于0则返回空串，而slice不能调换位置，且参数小于0默认为倒数位置，substr的第二个参数为截取字符个数而非结束位置
       3. match和search的区别：match返回数组，search返回匹配的第一个位置
+   5. Math
+      1. 返回任意范围的随机数：function getRandomArbitrary(start, end) { return Math.random()*(end - start) + start}
+   6. Date
+      1. 起始时间：1970年1月1日00:00:00
+      2. Date() : 普通函数，返回当前时间的字符串
+      3. new Date(): 返回日期对象的实例，参数可以是多种日期格式
+      4. 日期对象之间相减得到两个日期对象之间的时间戳之差，两个日期对象相加得到日期字符串相加
+      5. Date.now(): 返回当前时间距离起始时间的时间戳
+      6. Date.parse(str): 解析日期字符串
+   7. RegExp
+      1. 量词符(?、+、*)后加问号(？) = 非贪婪模式匹配，表示匹配成功即可返回而无需再往下检查。如'aaa'.match(/a+?/),结果输出 ['a']
+      2. 如果需要获取全局匹配字符串的捕获组，使用str.match(/xx/g)只能获取全部匹配的子串，而reg.exec(/xx/g)配合循环可以获取所有的捕获组
+6. 面向对象编程
+   1. new原理：新建一个空对象，并将空对象的原型对象指向构造函数的prototype属性，将空对象赋值给this,最后返回该对象（需要判断返回值是否是对象）
+   2. 检测是否是new命令的函数调用：函数内部使用new.target，如果非new调用构造函数，该属性返回undefined
+   3. 找出数组对大的元素： Math.max.apply(null, arr)
+   4. instanceof判断失真：Object.create(null) instanceof Object , 因为instanceof会检测右边构造函数的是否在左边对象的原型链上，由于左边指定原型为null因此出现判断失真
+   5. 获取实例对象的原型：Object.getPrototypeOf(实例对象),不建议用__prototype__.
