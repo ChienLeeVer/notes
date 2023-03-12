@@ -135,3 +135,21 @@
    3. 找出数组对大的元素： Math.max.apply(null, arr)
    4. instanceof判断失真：Object.create(null) instanceof Object , 因为instanceof会检测右边构造函数的是否在左边对象的原型链上，由于左边指定原型为null因此出现判断失真
    5. 获取实例对象的原型：Object.getPrototypeOf(实例对象),不建议用__prototype__.
+   6. this一般指向执行上下文，特例：事件监听中指向dom元素，定时器指向window, 箭头函数指向定义时的环境
+7. Promise对象
+   1. 图片懒加载：```var preloadImage = function (path) { return new Promise(function (resolve, reject) { var image = new Image(); image.onload = resolve; image.onerror = reject; image.src = path;})}```
+8. 浏览器对象模型
+   1. 浏览器加载js代码的方式：
+      1. script元素内部插入：直接在script内部嵌入代码
+      2. script标签加载外部指定文件代码：通过src属性，如果src内存在非英文字符，需要设置charset,如果想防止外部脚本代码被篡改，可以设置integrity属性设置唯一hash值
+      3. 事件属性：如onclick="xxx"，可以直接执行js代码，间隔符为；
+      4. URL协议：如<a href="javascript: xx;">文本内容</a>, href属性为url协议，允许执行JS代码，如果JS代码返回的是字符串将会替换文本内容，如果不想替换，则需要添加javascript:void 或者末尾添加void 0;
+   2. script元素
+      1. 工作原理：浏览器渲染引擎边下载html文档，边顺序解析，遇到script标签如果是内部代码直接执行，如果是外部文件则暂停解析，由网络引擎下载完脚本后交给JS引擎负责解析执行（因为JS可以修改dom）。因此通常script标签放在body的尾部，可以防止页面堵塞。如果脚本中引用了样式表，也会暂停执行脚本，等待样式表加载解析才会继续执行脚本。同时浏览器也限制同一域名的资源下载数量：6-20个，因此静态文件也通常放置在不同的域名之下。
+      2. defer属性：html解析遇到带defer的script外部脚本，继续解析html并并行下载外部脚本，延迟外部脚本的执行，直至html解析完毕，再按书写顺序执行脚本，解决阻塞效应。（正事先做完，杂事还在路上，即使到了我也得先做完正事）
+      3. async属性：html解析遇到带async的script外部脚本，继续解析html并并行下载外部脚本，解析期间如果外部脚本下载完毕会暂停html解析来按下载顺序执行JS脚本。（正事先做，杂事还在路上，杂事到了就先做杂事）
+      4. 动态加载：通过createElement创建script标签实现，需要设置async为false来保证脚本的执行顺序。
+   3. 浏览器的组成
+      1. 渲染流程：解析-合成-布局-绘制，这四部无需等待顺序执行，即可以解析一部分即可开始合成布局
+      2. 重流和重绘： 优化特性：尽量修改局部dom, 累积修改dom/一次性操作dom，比如使用window.requestAnimationFrame(回调函数)来累积执行。
+      3. window.requestAnimationFrame()该方法将会延迟回调函数的执行，直至在下一次回流之前执行。
