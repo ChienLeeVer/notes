@@ -153,3 +153,55 @@
       1. 渲染流程：解析-合成-布局-绘制，这四部无需等待顺序执行，即可以解析一部分即可开始合成布局
       2. 重流和重绘： 优化特性：尽量修改局部dom, 累积修改dom/一次性操作dom，比如使用window.requestAnimationFrame(回调函数)来累积执行。
       3. window.requestAnimationFrame()该方法将会延迟回调函数的执行，直至在下一次回流之前执行。
+   4. Cookie
+      1. 是服务器保存在浏览器的一段文本信息。服务器通过http回应的头信息里面通过Set-Cookie字段以键值对的方式设置cookie信息，一般情况下限制为4KB，其目的是在浏览器发送http请求时能够通过发送包含关键信息的Cookie给浏览器，方便服务器识别用户请求。而浏览器通过在http头上携带Cookie字段返回给服务器。
+      2. Cookie的组成包括名字、值、有效期、生效域名、路径等。Cookie采用键值对的方式设置名字和值，通过Expries字段和Max-age字段设置有效期（Exprise是绝对时间，格式为UTC，Max-age是相对时间，单位为秒数，两个字段都设置的情况下Max-age优先级更高，都不设置则默认窗口关闭消失），通过domain字段规定生效域名（不能是子域名或顶级域名，但是子域名能够共享上一级域名的Cookie）,path字段表示发生http请求携带包含路径需要携带Cookie（默认为/表示当前路径），Secure字段表示Cookie是否只有在https协议下才发送cookie，该字段无值，httpOnly字段表示是否允许JS脚本访问Cookie(document.cookie可以读写)。新增的sameSite字段有三个值（Strict、Lax、None）用于预防CSRF攻击（Cross-site-request-forge）即跨域站点请求伪造攻击，其中常用Lax值，设置该值后只允许链接、预加载、GET表单发送Cookie
+   5. XMLHttpRequest
+      1.示例
+        ```
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'xxx.com', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if(xhr.status === 200) {
+                        console.log(xhr.responseText)
+                    }else {
+                        console.lot(xhr.statusText)
+                    }
+                }
+            }
+            xhr.send(null)
+        ```
+      2.跨域请求携带Cookie
+        ```
+            xhr.withCredentials = true;
+            //后端设置Access-Control-Allow-Credentials: true;
+        ```
+    6.同源限制
+        1.同源：协议、端口、域名相同;
+        2.目的：防止数据泄露,限制读取非同源的Cookie、LocalStorage、IndexedDB。限制读取非同源网页的DOM。向非同源地址发送AJAX请求，浏览器会拒绝响应。
+        3.规避限制的方法：
+            a.Cookie共享：两个子域名网页通过设置相同的domain实现共享；
+            b.跨域窗口通信：通过修改iframe子窗口URL的hash值，子窗口hashChange方法监听获取hash值。另一种方法是通window.postMessage方法发送信息；
+            c.LocalStorage:父窗口通过window.postMessage方法向子窗口发送信息，子窗口接受保存在localStorage中；
+            d.Ajax: Nginx代理、JSONP、WebSocket、CORS
+                JSONP:
+                    ```
+                        function addScriptTag(src) {
+                            var script = document.createElement('script')
+                            script.src = src
+                            script.setAttribute('type', 'text/javascript')
+                            document.body.appendChild(script)
+                        }
+                        window.onload = function() {
+                            addScriptTag('http://example.com/ip?callback=foo')
+                        }
+
+                        function foo(data) {
+                            console.log(data)
+                        }
+                    ```
+                WebSocket:一种通信协议，使用ws:// 或者wss://作为协议前缀，协议没有同源限制。因为通过WebSocket发送的头信息里有Origin表明请求来源，服务器可以判定是否通信。
+                CORS(Cross-Origin-Resource-sharing):跨域资源解决方案为最终解决方案，JSONP只能发送get请求，CORS能够发送任何请求。CORS分为简单请求和复杂请求(多发送一次预检请求)
+    7.Storage接口：用于脚本在浏览器保存数据（sessionStorage会话存储、localStorage持久化存储）,该接口一样有同源限制。该接口的有几个方法（setItem、getItem、removeItem、key）。当接口保存的数据发生变化时，会触发storage事件，可以为此事件添加监听函数，单一窗口无法触发该事件，可以其它窗口监听事件变化从而实现窗口通信。
+
