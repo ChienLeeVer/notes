@@ -4,23 +4,32 @@
 
 ---
 
-### 块级元素和内联元素
->块级元素相当于一个大纸箱，内联元素相当于一个细小长条纸箱，大纸箱里面可以放小纸箱和细小长条纸箱，但是细小长条纸箱出了放其它小长条纸箱外，不能放大纸箱和小纸箱。
+### HTML5结构
+    1.DTD:DOCTYPE文档类型声明，该指令告诉浏览器以哪个版本的html进行编写。通常html5只有一种写法<!DOCTYPE html>，而htnk4.01有三个书写版本
+    2. lang: 网页的语言，en表示英语, zh表示中文
+    3. head: 网页的配置信息
+    4. meta: 元标签，表示网页的基础配置
+    5. charset:字符集，告诉文档的编码方式
+    6. title: 网页的标题，显示在浏览器的标题栏上，同时也是SEO搜索的结果
+    7. keywords： 网页的关键词
+    8. description: 网页的描述
+    9. X-UA-Compatible：告诉IE8采用何种IE版本去渲染页面
+    10. Edge: 告诉IE以最高模式渲染文档
 
-### 标签
+### html5新增语义化标签
+1. header
+2. nav
+3. footer
+4. aside
+5. section
+6. article
 
-```
-<html lang="zh-CN"> //lang表示为站点设置主语言
-<link rel="stylesheet" href="my-css-file.css" >
-//defer表示延迟加载直至html解析完毕
-<script src="my-js-file.js" defer></script>
-
-<a href=""><img src=""/></a>
-//需要指向email时
-<a href="mailto:123456@163.com"></a>
-//需要下载文件时
-<a href="地址" download="文件名"></a>
-```
+### h5新增表单控件
+color、date、range、file、search、url、time、datalist
+### 特殊的内联元素（块级、内敛元素本质都是浏览器内核display初始化决定的）
+    一般情况下，内联元素无法设置宽高，由内容撑开，但是以下内联元素特殊可以设置宽高同时不独占一行,亦称行内块元素图片、音频、表单输入和下拉及文本框都是
+    img（图片）、audio、video（音频）、**input（表单输入）** 、select（表单下拉框和选项）、 option、textarea（表单文本框）
+### 标签细节点
 
 1.p标签为文本级标签的块级元素，里面只能放文本、图片、表单元素
 2.a标签为文本级标签的内联元素，里面只能放文本、图片，href属性为javascript:;页面不会跳转，href属性可以为空，表示一个占位符，可以是绝对路径/相对路径/锚点。target属性可以是_blank、_self、iframenaem等，rel属性可以有多个值用“ ”分隔；
@@ -77,22 +86,6 @@ src表示将**资源下载到html页面并替换**，在浏览器遇到src时，
     无法时会弹出这句话
 </audio>
 ```
-
-### web存储
->web存储有两种方式：**window.sessionStorage** 和 **window.localStorage**
-两种差异如下：
-| 存储方式        | 存储大小   |  保质期  |  存储位置  |
-| --------   | :-----:  | :----:  | :----: |
-| sessionStorage     | 5M |   窗口存在时     | 浏览器内存 |
-| localStorage        |   20M   |   永久存在，除非手动删除   | 硬盘 |
->使用方法：
-1.存储数据 **setItem(key, value)**
-2.获取数据 **getItem(key)**
-3.删除数据 **removeItem(key)**
-4.清空所有数据 **clear()**
-5.根据索引获取数据 **key(n)**
-
-例子：在浏览器中存储数据的方式有两种瓶子，一种叫sessionStorage塑料瓶（简称S瓶子），另一种叫localStorage保温杯（简称L瓶子），一个瓶子可以装1M大小的数据，S塑料瓶一共有5个，而L保温杯有20个，但是S塑料瓶是一次性的只能在一个工地（一个窗口存在时）用，这个工地用完了（窗口关闭了）就扔了下次再买，L罐子可以拿回家（硬盘）除非自己扔了它，拿回家的保温杯也可以再拿出来到其它的工地（其它窗口）用。
 
 ### 获取用户位置
 > 浏览器中有个navigator对象，通过这个对象的属性和方法可以获取到用户的位置，浏览器可能会通过ip地址，网关等多种方式获取，在获取位置时浏览器通常要经过用户的同意才能获取位置。常见的方法有： **navigator.getLocation.getCurrentPosition(successBack, errorBack, other);**

@@ -12,7 +12,7 @@
 2.  const:
     1.  const表示常量，一旦赋值不可改变（指向的内存地址不可改变）。声明即要初始化。
     2.  其它特点和let命令一样
-3.  顶层对象：let和const、class命令声明的变量不属于顶层对象，var和function依旧是顶层对象
+3.  顶层对象：let和const、class命令声明的变量不属于顶层对象，var和function依旧是顶层对象,ES2020可以通过globalThis获取任何环境下的顶层对象
 
 ### 变量的解构赋值
 1.  解构赋值：ES6允许以一定的模式从对象/数组中取值，数组的解构赋值按位置一一对应取值，否则取undefine,例如let [a,b,c] = [1,2,3]，等效于a=1,b=2,c=3。赋值表达式的右边要求是一个具有Iterator接口的数据结构，即可以遍历的数据结构，比如数组/对象，如果是基础类型数据会尝试装箱转为对象/数组。（undefined和null不可转）
@@ -21,6 +21,13 @@
 4.  对已声明的变量解构赋值,必须使用圆括号扩起来：如 let x; （ {x} = {x : 123}）,因为x已经声明，加上圆括号，这样做的目的在于防止JS将{}识别为代码块而不是解构赋值。
 5.  函数参数也可使用解构赋值
 
+
+### 字符串新增的方法
+    1. 查找字符串：includes(str:String,[startIndex]), startsWith(str:String, [startIndex]), endsWith(str, [startIndex])
+    2. 重复字符串：repeat(number:Number)
+    3. 填充字符串：padStart(maxStrLength:Number, padStr:String), padEnd(maxStrLength:Number, padStr:String),该方法一般用在数值补全指定位数
+    4. 消除空格：trimStart(), trimEnd()
+    5. 匹配与替换字符串：matchAll(), replaceAll(被替换字符串, 替换字符串/函数返回值)等价于g模式正则下的replace(）,不过replaceAll使用正则也必须用上g模式，第二个参数可以是$`,$',$&, $n
 
 ### 数组新增扩展
 1.扩展运算符：```...```，能够将数组拆分为序列，经常用在数组复制，将具有iterator接口对象/类数组转为真数组，解构赋值上，需要注意的是数组复制只是简单的浅拷贝。用在解构赋值上只能放在最后一个。
@@ -43,19 +50,32 @@ flatMap(callback)对每项数组元素map，再对返回的数组执行flat()
 
 5.sort排序方法
 
+### 数值的扩展
+    1.  二进制和八进制的表示方法：0b 、 0o, 转十进制Number(),转其他进制toString()
+    2. isNaN(number: Any) => Number.isNaN(number:Number)仅接受数值类型的参数
+    3. Number.isInteger(): 判断是否是一个整数, 此方法并非完全奏效，精度超过限度时判断不准确
+    4. BigInt: 123456789n, 可以表达任意位数的整数，是一种特殊的值，不等价于普通整数
 
 ### 函数新增扩展
 
-1.参数：参数可以设置默认值，并且可以使用解析构值；
+1.参数：参数可以设置默认值，并且可以使用解析构值，通唱此类参数放在函数的尾参数位置；
 
-2.属性：f.length返回设置了默认值的参数之前的参数个数 ，f.name返回具名函数的名字
+2.属性：f.length返回形参个数 ，但不返回设置了默认值的参数和剩余参数及其它们之后的参数，f.name返回具名函数的名字
 
-3.作用域：参数设置默认值，如value = 2 等同于 let value = 2
+3.作用域：参数设置默认值，如value = 2 等同于 let value = 2，并且设置了默认值的参数括号内会暂时形成一个作用域，只能访问外部作用域，不能访问函数内部。如果参数默认值设置为一个函数，那么这个函数的作用域在定义时确定，即只能访问临时形成的作用域或者外部作用域（这个情况也仅限于这个函数使用某个变量，但这个函数未定义，临时作用域也没定义才会访问外部作用域）
 
 4.严格模式：函数使用默认参数，解析构值，剩余运算符，函数内部不能使用严格模式
 
-5.箭头函数：本身没有this，this指向外部定义对象，不能当作构造函数，不能使用arguments,不能使用yield命令
+5.箭头函数：本身没有this和argument（this指向定义时上层作用域中的this），不能当作构造函数，不能使用yield命令。 不适合的场景：动态this以及对象内部定义方法
 
+6.尾递归：将所有要用到的内部变量改写成函数的参数
+
+### 数组的新增
+    1.  克隆数组： 浅拷贝[...arr] / Array.from(arr) / [].slice.call(arrayLiek)
+    2.  任何定义了遍历器接口的对象都可以用扩展运算符(三个点...)转为真正的数组
+        1.  ``` Number.prototype[Symbol.iterator] = function *() { let i = 0; let num = this.valueOf(); while (i < num) { yield i++; } }``` 具体含义是，generator函数生成了以恶个遍历器对象，内部值为1， 2，3，4，5，而在Number原型上添加该函数后，任何数字都可以使用扩展运算符，并且其返回值为遍历器对象的所有值
+    3.  Array.from(arrayLike, [func], [thisOfFunc]);Array.from能将一个具有length属性的对象转为数组，func为加工函数，其返回值可以作为数组的值，thiOfFunc可以指定func的this
+    4.  数组扁平化：arr.toString().split(',').map(n=>+n) / arr.flat(Infinity) 均不会对原数组产生影响,
 
 ### set和map
 set是一种叫做集合的数据结构。map是一种叫做字典的数据结构

@@ -40,7 +40,7 @@
 
 1.  基本概念：对象是无序键值对的集合
 2.  键名：内部均转换为字符串
-3.  歧义：单独的{}会被视为代码块，({})圆括号包裹起来被解释为表达式，里面的{}被视作对象
+3.  歧义：单独的{}会被视为代码块，({})圆括号包裹起来里面的{}被视作对象
 4.  属性的查看： Object.keys(obj)
 5.  属性的删除： detelete obj.xx ,该方法删除一个不存在的属性不会报错，因为该操作不会对程序产生任何影响，且返回true，因为读取不存在的属性值为undefined
 6.  判断一个属性是否存在： prop in obj ,使用in运算符即可, 缺点在于无法识别是否是继承属性还是自身属性，可以另外使用obj.hasOwinProperty(‘属性名’)
@@ -61,7 +61,7 @@
 4. 函数的作用域：
    1. 局部作用域：函数内部定义的变量称之为局部变量，只能在函数内部读取，除非提供外部访问接口（闭包）
    2. 函数内部的变量提升：函数内部用var定义的变量被提升到函数头部
-   3. 函数本身的作用域： 在函数内部访问的变量在定义时就会确定访问的变量是哪一个作用域的，与运行时无关。（该知识点容易混淆：函数的作用域仅限于定义时，只有this是运行时确定，箭头函数中的this也是定义时确定）
+   3. 函数本身的作用域： 在函数内部访问的变量在定义时就会确定访问的变量是哪一个作用域的，与运行时无关。（该知识点容易混淆：函数的作用域仅限于定义时，只有this是运行时确定，箭头函数中的this也是定义时确定）总而言之，一个函数内部执行某个语句，需要某个变量时，一定首先在自身函数作用域其次是全局作用域，不可能是其它函数的作用域。例如在A函数内部执行B函数，B函数的变量一定不会去找A函数的作用域。this除外
 5. 闭包： 闭包就是一个函数能够读取其他函数内部变量
    1. 优点：闭包能够延长变量的生命周期和封装对象的私有属性和方法。因为我们知道函数内的作用域是运行时确定的，当JS引擎发现，一个函数运行完毕后，仍然有其他函数需要该函数的运行环境时（比如使用当前运行环境的某个变量），不会对其环境和变量进行垃圾回收。
    2. 缺点：内存消耗大，每次运行一次函数都会产生一个新的闭包
@@ -70,7 +70,7 @@
 ### 数组
 
 1.  概念：按次序排列的一组值。属于特殊的对象。因此可以赋值非数值 键名
-2.  length: 该属性只返回最大整数数值键名 + 1
+2.  length: 该属性只返回数据类型为整数的最大数值键名 + 1
 3.  in运算符： 数组是一种特殊的对象，in运算符也可用于数组。
 4.  for in循环：可以遍历数组中非数值的键值，因此不推荐使用for in遍历数组，而是forEach方法/for of。
 5.  空位与undefined: [,,,]与[undefined,undefined,undefined]不同，前者称之为空位，访问空位值为undefined,在使用forEach/Object.keys/for of时会跳过前者的空位，但是不会跳过后者。
@@ -78,13 +78,14 @@
 
 ### 运算符
 
-1.  加法运算符： 如果双方没有字符串，则隐式转换为数字相加。其中一方有字符串则转为字符串相连接。如果其中一方为对象，则必须转为原始类型数值(valueOf => toString)，一般来说valueOf总是返回对象自身，而toString返回表示数据类型的字符串
+1.  加法运算符： 如果双方没有字符串，则隐式转换为数字相加。其中一方有字符串则转为字符串相连接。如果其中一方为对象，则必须转为原始类型数值(valueOf => toString，其中Date对象会优先调用toString)，一般来说valueOf总是返回对象自身，而toString返回表示数据类型的字符串
     1.  其他运算符（- 、  * 、%）：一律转为数值，余数运算符的正负号由第一个数决定
     2.  数值运算符(+): 能够将任何值转为数值，类似Number()。如：+[] => 0
     3.  指数运算符（**）：2 ** 3 ** 2 = 2^(3^2) = 512
 
 2.  比较运算符：如果比较大小，先看左右是否都是字符串，是字符串则按Unicode编码比较，否则转为数值比较大小。如果比较是否相同，严格相等会判断类型，不同则false，相同则比较值/地址。相等运算符比较，若类型不同则将数据进行类型转换，均转换为数值(如果双方都是字符串则不用转换)。显然对象回调用valueOf和toString方法
     1.  原始类型值相等比较特例：undefine和null之间任意相等比较返回true, undefined或者null和其他类型值比较时返回false。
+    2.  两个对象之间的非相等比较，如果转换后的类型都是字符串，则直接比较Unicode码，不再继续转换为数值，比如[2] > [11] 等价于 ‘2’  > '11'，直接按照Unicode编码比较，而不是再转换为数值
 
 3.  布尔运算符
     1.  取反运算符：！能够将布尔值取反或者将非布尔值转为布尔值再取反（如!undefined、!null、!0、!’‘均先转为布尔值再取反为true）。只有!!连续两个才是将非布尔值转为布尔值
@@ -130,15 +131,85 @@
       1. 量词符(?、+、*)后加问号(？) = 非贪婪模式匹配，表示匹配成功即可返回而无需再往下检查。如'aaa'.match(/a+?/),结果输出 ['a']
       2. 如果需要获取全局匹配字符串的捕获组，使用str.match(/xx/g)只能获取全部匹配的子串，而reg.exec(/xx/g)配合循环可以获取所有的捕获组
 6. 面向对象编程
-   1. new原理：新建一个空对象，并将空对象的原型对象指向构造函数的prototype属性，将空对象赋值给this,最后返回该对象（需要判断返回值是否是对象）
+   1. new原理：使用Object.create方法以构造函数的原型为模板创建一个新对象，然后使用构造函数.apply方法以新对象作为this并传入参数执行构造函数取得结果，判断结果是否为对象类型返回结果
+    ```
+        function _new( constructor, params ) {
+            var args = [].slice.call(arguments)
+            var constructor = args.shift()
+            var context = Object.create(constructor.prototype)
+            var result = constructor.apply(context, params)
+            return (typeof result === 'object' && result != null) ? result : context
+        }
+    ```
    2. 检测是否是new命令的函数调用：函数内部使用new.target，如果非new调用构造函数，该属性返回undefined
    3. 找出数组对大的元素： Math.max.apply(null, arr)
    4. instanceof判断失真：Object.create(null) instanceof Object , 因为instanceof会检测右边构造函数的是否在左边对象的原型链上，由于左边指定原型为null因此出现判断失真
    5. 获取实例对象的原型：Object.getPrototypeOf(实例对象),不建议用__prototype__.
    6. this一般指向执行上下文，特例：事件监听中指向dom元素，定时器指向window, 箭头函数指向定义时的环境
-7. Promise对象
-   1. 图片懒加载：```var preloadImage = function (path) { return new Promise(function (resolve, reject) { var image = new Image(); image.onload = resolve; image.onerror = reject; image.src = path;})}```
-8. 浏览器对象模型
+   7. instanceof: 检测某个对象是否是构造函数的实例，本质是检查实例对象的原型链上是否有构造函数的原型对象
+   8. 对象的继承：
+   ```
+        fucntion A() {}
+        function B() {
+            A.call(this)
+        }
+        B.prototype = Object.create(A.prototype)
+        B.prototype.constructor = B
+   ```
+   9.拷贝一个对象：function copyObject(orig) {
+        return Object.create(Object.getPrototypeOf(orig), Object.getOwnPropertyDescriptors(orig)) //属于浅拷贝
+   }
+   9. 获取一个对象的原型：Object.getPrototypeOf(obj)
+7. 定时器：
+   1. setTimeout(function, delay, funcParam1, funcParam2...)，其中delay表示的是每隔delay时间段就向延时任务队列添加该任务，并不计算本身任务的具体执行时间
+   2. 防抖：连续触发会重置定时器
+    ```
+        function debounce(fn, delay) {
+            var timer = null
+            return function() {
+                var context = this
+                var args = arguments
+                clearTimeout(timer)
+                timer = setTimeout(function() {
+                    fn.apply(context, args)
+                }, delay)
+            }
+        }
+    ```
+    3. 截流：连续触发在完成之前只响应一次
+    ```
+        function throttle(fn, delay) {
+            var oldTime = 0
+            return function() {
+                var newTime = Date.now()
+                var context = this
+                var args = arguments
+                if(newTime - oldTime > delay) {
+                    oldTime = new Date().getTime()
+                    fn.apply(context, args)
+                }
+            }
+        }
+
+        function throttle2(fn, delay) {
+            let timeout
+            return function() {
+                let context = this
+                let args = arguments
+                if(!timeout) {
+                    timeout = setTimeout(() => {
+                        timeout = null
+                        fn.apply(context, args)
+                    }, delay)
+                }
+            }
+        }
+    ```
+8. Promise对象
+   1. 概念：Promise包含了将来某个时间段的执行任务，Promise充当异步操作与回调函数之间的中介，使得异步操作具备同步的借口；
+   2. then值传递：then方法接受两个参数，第一个是resolve之后的执行函数，第二个是rejected之后的执行函数，如果接着进行第二次then链式调用，那第二次then链式调用接受的第一个参数的函数，其参数为第一次resolve之后的执行函数的执行结果，如果第一次then方法中的第一个参数为值，则直接resolved并传递给第二次then链式调用接受的第一个参数的函数的参数
+   3. 应用之一：图片懒加载：```var preloadImage = function (path) { return new Promise(function (resolve, reject) { var image = new Image(); image.onload = resolve; image.onerror = reject; image.src = path;})}```
+9.  浏览器对象模型
    1. 浏览器加载js代码的方式：
       1. script元素内部插入：直接在script内部嵌入代码
       2. script标签加载外部指定文件代码：通过src属性，如果src内存在非英文字符，需要设置charset,如果想防止外部脚本代码被篡改，可以设置integrity属性设置唯一hash值
@@ -204,4 +275,44 @@
                 WebSocket:一种通信协议，使用ws:// 或者wss://作为协议前缀，协议没有同源限制。因为通过WebSocket发送的头信息里有Origin表明请求来源，服务器可以判定是否通信。
                 CORS(Cross-Origin-Resource-sharing):跨域资源解决方案为最终解决方案，JSONP只能发送get请求，CORS能够发送任何请求。CORS分为简单请求和复杂请求(多发送一次预检请求)
     7.Storage接口：用于脚本在浏览器保存数据（sessionStorage会话存储、localStorage持久化存储）,该接口一样有同源限制。该接口的有几个方法（setItem、getItem、removeItem、key）。当接口保存的数据发生变化时，会触发storage事件，可以为此事件添加监听函数，单一窗口无法触发该事件，可以其它窗口监听事件变化从而实现窗口通信。
+    8.表单：任何表单的自动验证（如input的type="email"）通过系统的自动验证后，会匹配:valid的CSS伪类，没通过验证则匹配:invalid的CSS伪类 。程序员能够通过原生JS方法控制表单是否进行验证(Formate.checkValidity())，如何验证，验证是否通过的提示字段（Formate.setCustomValidity()）等
+    ```
+    //文件上传
+    <form method="post" enctype="multipart/form-data" >
+        <input type="file" multiple> // multiple表示一次可以选择多个文件上传
+    </form>
+    ```
+    9.WebWorker: 为js提供多线程环境。JS渲染主线程创建worker线程，将计算密集型和延迟任务交给worker线程完成，主线程负责UI交互，等worker线程完成后再处理。worker与主线程不在同一个执行环境，无法直接通信（postMessage通信可以)，存在同源限制，无法获取DOM，有自己的全局对象只能操作location和navigation对象，只能发送AJAX请求，只能读取网络脚本。当然worker自身也能加载JS脚本，同时能够创建worker线程
+    ```
+        //Worker线程完成轮询
 
+        function createWorker(f) { //创建本地worker线程
+            var blob = new Blob(['(' + f.toString() + ')()'])
+            var url = window.URL.createObjectURL(blob)
+            var worker = new Worker(url)
+            return worker
+        }
+
+        var pollingWorker = createWorker(function (e) {
+            var cache;
+
+            function compare(new, old) {}
+
+            setInterval(function() {
+                fetch('xxxxx').then(function (res) {
+                    var data = res.json()
+
+                    if(!compare(data, cache)) {
+                        cache = data
+                        self.postMessage(data) //表示数据更新，给主线程返回数据
+                    }
+                })
+            }, 1000)
+        })
+
+        pollingWorker.onmessage = function (e) {
+            //监听接收到的信息e.data
+        }
+
+        pollingWorker.postMessage('init')
+    ```

@@ -253,8 +253,11 @@ fetch(url,options).then(function(res){}).catch(function(err){})
 ## 页面性能优化
 ### 一.资源优化
 
-1. 多张图片合成一张图片，css和js文件合并，css和js文件压缩
-2. 图片使用懒加载
+1. 雪碧图：多张图片合成一张图片，css和js文件合并，css和js文件压缩，通过transform:translate移动图片
+2. 图片使用懒加载：当图片出现在浏览器视窗内时加载图片，实现方式有三种
+   1.元素距离视窗顶部的位置减去滚动条滚动的距离小于视窗高度：Element.getBoundingRect().top - document.body.scrollTop < window.innerHeight,这种方式需要防抖
+   2.利用IntersectionObserver: ```const intersectionObserver = new IntersectionObserver((entries)=>{ if(entries[0].intersectionRatio <= 0) { /*表明监听对象出现在视窗内*/ return;}})； intersectionObserver.observer(element)```
+   3.img标签设置loading属性值为lazy
 
 ### 二.非核心代码异步加载
 

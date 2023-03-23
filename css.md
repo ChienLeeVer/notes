@@ -6,21 +6,13 @@
 
 ---
 
-### 元素居中
-1.文本居中: <br> (1) 单行文本居中：```line-height = height```or 盒模型高度；
-            (2) 多行文本居中：```padding = (盒模型高度 - 总行高) / 2；```<br> &nbsp;&nbsp;&nbsp;&nbsp;
-            note:盒模型高度-总行高=p标签除了文字内容之外的高度空间,因此通过上下分配padding把文字挤压到中间.行高和文字大小的关系，如font-size:12px;&nbsp;line-height:36px;表示行高为字体大小的3倍；
-            (3)```vertical-align:middle;``` ：只适用于行内元素、行内块元素、表格里的单元格
-2.
-
-
 ### 包含块
 1. 元素的尺寸和位置是收到包含块的影响的，如width:10%,百分比相对于包含块而言，一般情况下元素的包含块为其父元素，但有两种特殊情况：
    1.   position为absolute:包含块为里它最近的position值不是staitic,即值为fixed/absolute/relateive/sticky的祖先元素（必须为块盒）的内边距区的边缘组成。
    2.   postion为absolute/fixed: 则满足transform/perspective/filter不为none,will-change为transform/perspective,contain值为paint的最近祖先块元素时为包含块。
 
 ### background-image 代替 img
-> 当图片为超大宽度的banner图时，图片会溢出页面宽度，导致出现滚动条。而用background-image的好处是，利用**```background-position:center center;```**可以保证banner图始终位于中间，并且图片随着页面宽度缩小而溢出的部分会被忽略不显示而图片的主要内容始终在中间。如下图
+    当图片为超大宽度的banner图时，图片会溢出页面宽度，导致出现滚动条。而用background-image的好处是，利用**```background-position:center center;```**可以保证banner图始终位于中间，并且图片随着页面宽度缩小而溢出的部分会被忽略不显示而图片的主要内容始终在中间。如下图
 <img src="http://img.smyhvae.com/20170813_1119.gif">
 
 ### 后代选择器和子代选择器的区别
@@ -278,7 +270,7 @@ e.伪元素
 ### CSS盒模型
 
 1. 盒模型内容：margin、border、padding、content;
-2. 盒模型类别：标准盒模型、IE盒模型。他们都包括margin、border、padding、content,不同之处在于标准盒模型的width只有content,而IE盒模型的width包括content、padding、border;
+2. 盒模型类别：标准盒模型、IE盒模型。他们都包括margin、border、padding、content,不同之处在于标准盒模型的width只有content,而IE盒模型的width包括content、padding、border; 其中button标签就是默认IE盒模型
 3. 如何设置盒模型：box-sizing: content-box;  box-sizing: border-box;
 4. 如何获取元素的宽高：
                 获取行内样式：element.style.width;
@@ -538,7 +530,10 @@ display:none、visibility:hidden、opacity: 0
 
 其它：height,width=0 或者position:absolute
 
-区别：display会不存在页面中，会触发重排，重绘，而opacity和visibility不会触发重排，opacity还能触发自身绑定事件，在动画中默认使用GPU加速不会触发重绘，子元素不会隐藏
+区别：
+    1.display不会占据空间，会触发重排，重绘,无法触发绑定事件
+    2.visibility仍会占据空间，仅触发重绘，无法触发绑定事件
+    3.opacity仍会占据空间，仅触发重绘，能触发自身绑定事件，特殊情况下在动画中默认使用GPU加速不会触发重绘，子元素不会隐藏
 
 ### 元素垂直居中的方式
 
@@ -822,3 +817,10 @@ div {
 }
 ```
 因此工作中使用渐进增强的写法较好。
+
+### 行内块元素默人的空白间隙
+    1.  原因：display:inline-block后，将被当作行内元素进行排版，行内元素之间的空白符（换行空格）将被处理（white-space:normal）为一个空白符,并且间距随字体大小变化而变化；
+    2.  方法：
+        1.  给父元素设置font-size:0; 再单独设置其他子元素的font-size
+        2.  给图片设置display: block;
+        3.  给元素添加float;
