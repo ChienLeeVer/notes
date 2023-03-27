@@ -259,7 +259,7 @@ e.伪元素
 ### 页面布局的几种方式
 布局方法：浮动、绝对定位、flex、table、grid
 1.左右宽度固定，中间自适应：
-    （1）浮动：左右浮动；注：中间的元素放最右边；
+    （1）浮动：左右浮动；注：中间的元素放最右边；, 父元素需要清除浮动：overflow:hidden / 伪元素设置clear:both；
     （2）绝对定位：左右left:0,right:0,中间设置margin:0 左右宽度；注：如果中间也设置绝对定位也会导致高度坍塌；
     （3）flex: 父容器设置flex，flex-direction:row,左右设置宽度，中间flex:1；
     （4）table:父容器设置为table且100%,左中右设置为table-cell,左右设置宽度：
@@ -278,13 +278,14 @@ e.伪元素
                 获取元素的位置（相对视窗）：element.getBoundingClientRect().width;
 
 5. margin:是用来描述兄弟之间的距离，在垂直方向上margin会发生重叠，如果都为正值/负值，取绝对值较大的一方，一正一负则合并后计算。而子元素的margin-top将会传递到父元素,并不会与父元素距离开来。取值方式和上面一样；
+6. margin负值问题：margin-left和margin-top都是控制自身移动，后面的元素跟着移动。而margin-right和margin-bottom都是控制后面的元素移动，自身不懂。
 
-6. BFC：块级格式化上下文。本质就是产生一个独立块级容器；
-7. BFC原理：（1）BFC内部的子元素，垂直外边距会发生重叠；
+7. BFC：块级格式化上下文。本质就是产生一个独立块级容器；
+8. BFC原理：（1）BFC内部的子元素，垂直外边距会发生重叠；
             （2）BFC是一个独立区域，外部不会对内部造成影响，反之亦然；(解决父子margin传递)
             （3）BFC区域不会与浮动区域重叠；（清除浮动）
             （4）BFC区域计算高度时会把浮动元素的高度计算；（解决高度坍塌）
-8. BFC的触发方式：（1）overflow不为visible；
+9. BFC的触发方式：（1）overflow不为visible；
                     （2）float不为none
                     （3）position不为relative/static;
                     （4）display:inline-block/inline-flex/flex/table-cell/table-caption;
@@ -318,20 +319,25 @@ event.target;触发事件的元素本身，通常用在事件委托中
 7. background-size:百分比是相对于盒子的宽高而言;
 8. 浏览器私有前缀：Chrome 浏览器：-webkit-； Firefox 火狐：-moz-；IE、Edge：-ms-；欧朋：-o-；
 9. margin负值特性：
-margin-left 设置负值，元素自身向左移动，后面的元素也向左移
-margin-right 设置负值，自身不受影响，右边元素向左移动
-margin-top 设置负值，元素自身向上移动 ，下面的元素也向上移
-margin-bottom 设置负值，自身不受影响，下方元素向上移动
-总结：左上一起移动，右下则右下兄弟动；
+    margin-left 设置负值，元素自身向左移动，后面的元素也向左移
+    margin-right 设置负值，自身不受影响，右边元素向左移动
+    margin-top 设置负值，元素自身向上移动 ，下面的元素也向上移
+    margin-bottom 设置负值，自身不受影响，下方元素向上移动
+    总结：左上一起移动，右下则右下兄弟动；
 10. 文本溢出变省略号：
-单行文本：```white-space:nowrap; text-overflow:ellipsis; overflow:hidden;```
+单行文本：```
+    white-space:nowrap; /*文字不换行*/
+    text-overflow:ellipsis; /*/超出显示省略号*/
+    overflow:hidden; /*超出隐藏部分*/
+    ```
 多行文本：```
-overflow:hidden;
-text-overflow:ellipsis;
-display:-webkit-box;
--webkit-line-clamp:需要显示的行数;
--webkit-box-orient:vertical:/*默认显示竖排*/```
-11. filter: blur()函数用于将高斯模糊效果应用于元素（图像）,与背景图像结合实现背景模糊
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box; /*作为弹性盒子模型显示*/
+    -webkit-line-clamp: 2; /*:需要显示的行数;*/
+    -webkit-box-orient: vertical:/*默认显示竖排*/
+    ```
+11. 背景模糊：filter: blur()函数用于将高斯模糊效果应用于元素（图像）,与背景图像结合实现背景模糊
 12. 防止拖拽文本域： resize:none;
 13. calc() 函数用于动态计算长度值;
 14. translate3d(x,y,z);其中x,y,z不能使用百分比，3D中z轴都不能用百分比，被默认无效；
@@ -348,7 +354,7 @@ display:-webkit-box;
 
 4.vw、vh:相对于页面视窗大小，把窗口分为100份，100vw即100份视窗宽度。 需要注意的是vw和vh的百分比时相对于定位的父元素而言，否则就是相对视窗而言
 
-### 圣杯布局
+### 传统布局：圣杯布局
 概念：浮动元素会左右浮动直至遇到边框或者另一个浮动元素。当两个元素的宽度不超过一行的宽度时将会并排呈现，否则另一个浮动元素换行。如果想在不改变两个元素宽度和两个浮动元素宽度超过一行宽度的前提下，实现两个浮动元素并排呈现，可以利用margin-left负值。margin表示当前元素的content和其它元素content之间的距离。而margin-left是指元素的最左边和其它元素最右边盒模型的距离。如果为左边距为负值则content会向左移动。我们先假设center元素为第一个浮动元素，left元素为第二个浮动元素
 
 ```
@@ -385,7 +391,7 @@ display:-webkit-box;
 ```margin-left: -200px;```
 ![](/cssImage/%E5%9C%A3%E6%9D%AF3.png)
 
-（3）如果margin-left值设置为负百分比，此时是相对于父容器而言，根据这个值算出是否浮动到上一行。如果算出的值是超过自身浮动元素的宽度则拉到上一行。此时需要注意的是，第二行的浮动元素被拉到第一行后margin-left的起始位置是相对于原本第一行浮动元素的最右边。也就是说先拉到第一行再向左浮动100%，由于此时父容器的宽度是绿色区域决定的，
+（3）如果margin-left值设置为负百分比，此时是相对于父容器width而言，根据这个值算出是否浮动到上一行。如果算出的值是超过自身浮动元素的宽度则拉到上一行。此时需要注意的是，第二行的浮动元素被拉到第一行后margin-left的起始位置是相对于原本第一行浮动元素的最右边。也就是说先拉到第一行再向左浮动100%，由于此时父容器的宽度是绿色区域决定的，
 
 ``` margin-left: -100%;```
 
@@ -442,7 +448,7 @@ display:-webkit-box;
 ```
 ![](/cssImage/%E5%9C%A3%E6%9D%AF5.png)
 
-### 双飞翼布局
+### 传统布局：双飞翼布局
 概念：在圣杯布局的基础上，取消container的padding为left和right预留的位置,改为在center外添加一个容器，在center添加margin:0 100px;这样做核心在于使用外边距将内容封锁在两边浮动元素的中间。
 ```
 .container {
@@ -479,6 +485,12 @@ display:-webkit-box;
 </section>
 ```
 
+0
+
+### margin负值的应用场景
+    1. 等高布局：即控制一个容器的高度随另一个容器的高度变化而变化,关键实现：需要自适应的容器设置padding-bottom:2000px;margin-bottom:2000px;
+    2. 图像占位不闪烁：
+    3. 圣杯布局/双飞翼布局
 
 ### 设备像素、css像素、设备独立像素、dpr、ppi是什么
 设备像素：即物理像素，设备一经出厂就无法改变，代表设备能够控制的最小物理单位
@@ -537,9 +549,11 @@ display:none、visibility:hidden、opacity: 0
 
 ### 元素垂直居中的方式
 
-内联元素垂直居中：```line-height = height; text-align = center```
+单行文本垂直居中：```line-height = height; text-align = center```
 
 多行文本垂直居中：参照table垂直居中
+
+行内块/行内元素垂直居中：vertical-align: middle
 
 块级元素垂直居中：
 

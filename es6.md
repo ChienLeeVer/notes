@@ -77,16 +77,44 @@ flatMap(callback)对每项数组元素map，再对返回的数组执行flat()
     3.  Array.from(arrayLike, [func], [thisOfFunc]);Array.from能将一个具有length属性的对象转为数组，func为加工函数，其返回值可以作为数组的值，thiOfFunc可以指定func的this
     4.  数组扁平化：arr.toString().split(',').map(n=>+n) / arr.flat(Infinity) 均不会对原数组产生影响,
 
-### set和map
-set是一种叫做集合的数据结构。map是一种叫做字典的数据结构
+### 对象的扩展
+    1.  属性和方法简写：    <br>```let berry = 12; const obj = { berry, getBerry() { return this.berry } }```
+    2.  属性的遍历方法：
+        1.  for...in: 遍历自身及继承的可枚举属性
+        2.  Object.keys(): 返回对象自身可枚举属性
+        3.  Object.getOwnPropertyNames(): 返回自身所有属性（枚举及不可枚举）
+        4.  Object.getOwnPropertySymbols(): 返回自身所有Symbol属性
+        5.  Reflect.ownKeys(): 返回对象自身可枚举/不可枚举/Symbol属性
+    3.  属性的遍历顺序：数字小到大->字符串键添加顺序->Symbol键添加顺序
+    4.  设置/获取一个对象的原型：Object.setPrototypeOf(obj, prototype); Object.getPrototype(obj)
 
-集合是一堆无序、相关联且不重复的内存结构的组合。字典是元素的组合，每个元素都有一个称之为key的域，每个元素的key互不相同。
+### 运算符的扩展
+    1. 指数运算符： **
+    2. 链式运算符： ?. , a?.b
+    3. Null/Undefined判断运算符： ?? ，有这么一种情况，let val = a || 默认值，希望a不存在时默认值生效，但是||是会进行布尔值转换的，所以当a为false/0时，我们认为0也是一种结果，不应该使用默认值，但|| 判定左边表达式失效，因此为了只判断某个变量是否存在而诞生的??运算符，这个运算符只会在左边表达式为undefined/null时，右边表达式才会生效。
+    4. 通常链判断运算符和Null运算符一起使用： 如const animationDuration = response.settings?.animationDuration ?? 300;
+
+### Symbol
+    1.  为避免对象属性名冲突而产生，在对象内部作为属性名时，一定要放在方括号中，否则视作字符串属性，如：let s = Symbol(); let obj = { [s]: function() { ... } }
+    2.  具体实际用途: Symbol能够创建一个独一无二的值，并且这个值赋值给某个变量，当在其他地方使用这个变量时，犹豫这个变量的值是独一无二的，不用担心与其它‘相同’值产生冲突
+
+### set和map
+
+set是不重复(基础类型的值不一样，复杂数据类型的地址都不一样)的内存结构的组合。
+
+set的操作方法有：add()、delete()、has()、clear() 属性为size
+set的遍历方法有：key()、values()、entries()、forEach(), 遍历顺序为插入顺序,set的键值同名
+例子： 并集：new Set([...setA, ...setB]), 交集：new Set([...setA].filter(x=>setB.has(x))), 差集：new Set([...SetA].filter(x=>!setB.has(x)))
+
+WeakSet限定了成员类型**只能是对象**，并且对象都是弱引用，不会记入垃圾回收机制里，适合临时存储对象，当对象在外部消失时，WeakSet中引用会自动消失，因此无法保证对象是否存在并**不适用于遍历,可用作存储DOM节点**
+WeakSet的操作方法：add()、delete()、has()，没有clear()
+
+map是为解决对象属性名只能为字符串的问题诞生的，它是各种键值对的集合，但不限于字符串.
+map的操作方法有：set()、delete()、has()、clear()，属性为size
+map的遍历方法有：keys()、values()、entries()、forEach()
+WeakMap限定了键名的类型为对象，且键名不计入垃圾回收机制,无法遍历，没有clear()
 
 区别：都存储不重复的值。不同在于set是以[值，值]的形式存储，而map是以[键，值]的形式存储（能以对象作为键名）
-
-set的方法有：add、delete、has、clear 属性为size
-
-map的方法有：set、delete、has、clear 属性为size
 
 ### proxy
 
@@ -106,6 +134,23 @@ map的方法有：set、delete、has、clear 属性为size
             },
             ...
         })
+
+this问题：使用proxy代理的对象，在对象的方法中访问this的操作，在操作proxy实例时，这个this将会指向proxy
+
+
+### Promise对象
+1.  Promise: 保存着未来才会执行的事件的结果
+2.  特点：promise的状态有三种，pending/fulfilled/rejected,从pending到fulfilled/rejected状态的改变是由异步操作的结果决定的，一旦状态改变就无法再次改变
+
+3.  说明：resolve方法能够修改状态，并且可以将参数传递出去。then方法的两个参数都是回调函数，分别在状态改变为resolved/rejected时调用，并且它们的参数都是Promise对象传递过来的。如果这个参数来源是一个promise对象，例如resolve(new Promise(...)),那么本次这个resolve并不会改变pending状态,其状态由传递的'new Promise(...)'决定
+4.  Promise.all([ p1, p2, p3 ]),  p1,p2,p3都是promise类型的实例，如果不是会自动调用Promise.resolve()方法转为promise，例如：const p = Promise.all(p1, p2), 那么p的状态由所有promise实例决定，这个方法表明当所有promise都resolve时才会执行Promise.all().then()里的异步操作
+5.  Promise.race(p1, p2, p3)：几个promise竞争，谁的状态先改变，p的Promise.race返回的Promise实例状态就跟着改变
+6.  Promise.any():只要有一个promise实例resolved,该方法返回的promise对象状态就会变为fulfilled，
+7.  Promise.resolve():该方法接收一个对象，将其转为Promise对象。注意，如果Promise.resolve()的参数对象是一个具有then方法的对象，则会立刻调用该对象的then方法，如果参数不是对象或者不具有then方法的对象，则直接返回一个新的Promise对象，状态为resolved，同时传递参数出去。
+
+8.  应用：
+    1.  加载图片：
+   ```function preloadImg = function(path) {  return new Promise(function(resolve, reject) { const image = new Image(); image.onload = resolve; image.src = path; image.onerror = rejected; })}```
 
 ### modules
 
