@@ -152,6 +152,10 @@ this问题：使用proxy代理的对象，在对象的方法中访问this的操�
     1.  加载图片：
    ```function preloadImg = function(path) {  return new Promise(function(resolve, reject) { const image = new Image(); image.onload = resolve; image.src = path; image.onerror = rejected; })}```
 
+
+### Iterator
+ 1. 目的：为各种不同的数据结构提供统一的访问机制，比如任何数据结构只要部署了iterator接口，都可以完成遍历操作
+ 2.
 ### modules
 
 概念：modules即模块，能够独立完成某个功能和单独命名的数据结构和程序代码的集合
