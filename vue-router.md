@@ -306,41 +306,46 @@ export default {
 
 
 
-### 导航守卫
+### 导航守卫Each-Enter
 >顾名思义，在路由跳转前后执行某些方法
 
 1. 全局前置守卫：
-（1）what:在路由跳转之前进行验证。所有导航守卫都是一个promise,只有所有守卫resolved之后，才会进行跳转
-（2）how:```const router = new VueRouter({...}); router.beforeReach()```
+    1.  概念:在路由跳转之前进行验证。所有导航守卫都是一个promise,只有所有守卫resolved之后，才会进行跳转
+    2.  使用方法:在router.js中
+    ```
+    const router = new VueRouter({...});
+     router.beforeReach()
+     ```
 
-```
+    ```
     router.beforeEach((to, from, next)=>{})
-    //to : 表示目标路由对象
-    //from : 表示当前准备离开的路由
-    //next：next是一个方法，一个钩子中只能调用一次next方法，next参数和this.$router.push()的参数一样。next()表示进行管道中的下一个钩子，所有钩子执行完之后，就resolved。next(false)表示终止路由并跳转到from
-```
+        //to : 表示目标路由对象
+        //from : 表示当前准备离开的路由
+        //next：next是一个方法，一个钩子中只能调用一次next方法，next参数和this.$router.push()的参数一样。next()表示进行管道中的下一个钩子，所有钩子执行完之后，就resolved。next(false)表示终止路由跳转并跳转回原本的路由。
+        next(字符串/路由对象)表示跳转到某路由
+    ```
 
-```
-//实现用户验证
-router.beforeEach((to, from, next)=>{
-    if(to.name !== 'login' && isAuthenticaed ) next({name:'login'})
-    else next()
-})
-```
+    ```
+    //实现用户验证
+    router.beforeEach((to, from, next)=>{
+        if(to.name !== 'login' && isAuthenticaed ) next({name:'login'})
+        else next()
+    })
+    ```
 
 2. 全局后置守卫
-（1）what:实现跳转后执行某些方法，但不能改变跳转的方法
-（2）how:
+（1）概念: 实现跳转后执行某些方法，但不接受next参数
+（2）使用方法:
 
-```
-router.afterEach((to, from)=>{
-    //不会改变路由结果
-})
-```
+    ```
+    router.afterEach((to, from)=>{
+        //不会改变路由结果
+    })
+    ```
 
 3. 路由独享守卫
-（1）what: 即给某个路由添加守卫，只有一个beforeEach
-（2）how:
+（1）概念: 全局路由守卫针对所有路由变化，而路由独享守卫，只针对当前路由，路由守卫只有一个beforeEach钩子
+（2）使用方法:
 
 ```
 //router.vue
